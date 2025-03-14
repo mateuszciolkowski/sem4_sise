@@ -14,6 +14,9 @@ class Board:
                 row = list(map(int, file.readline().split()))
                 self.board.append(row)
 
+    def getBoard(self):
+        return self.board
+
     def print_board(self):
         for row in self.board:
             print(' '.join(map(str, row)))
