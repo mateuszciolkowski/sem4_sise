@@ -3,24 +3,23 @@ from traceback import print_tb
 
 from Board import Board
 
-
 visited = set()
 
-def dfs(Board, path, max_depth, permutation, depth = 0):
+def dfs(board, path, max_depth, permutation, depth = 0):
     print(f"węzeł depth = {depth}")
-    if Board.is_solved():
+    if board.is_solved():
         print("rozwiązane")
         return path         #sprawdzamy, czy jest rozwiązane
     if depth == max_depth:
         return None         # osiągniecie maksymalnej głębokości
 
-    current_board = Board.getBoard()
+    current_board = board.getBoard()
     visited.add(tuple(map(tuple, current_board))) # można stworzyć nowy obiekt, który będzie przechowywał
 
-    possible_moves = Board.get_possible_moves()
+    possible_moves = board.get_possible_moves()
 
     for direction in permutation:
-        new_board = copy.deepcopy(Board)
+        new_board = copy.deepcopy(board)
         new_board.move(direction)
         print(path)
         if direction in possible_moves and tuple(map(tuple, new_board.getBoard())) not in visited:

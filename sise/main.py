@@ -6,8 +6,8 @@ from dfs import dfs
 from ProgramOptions import ProgramOptions
 
 #ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANE
-program_options = ProgramOptions.options()
-program_options.print_options()
+# program_options = ProgramOptions.options()
+# program_options.print_options()
 
 board = Board('resources/initBoard.txt')  # Wczytanie planszy z pliku
 board.print_board()  # Wyświetlanie planszy
