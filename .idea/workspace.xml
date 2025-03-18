@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="580bbb3e-b248-4a07-ad93-fddd292068d3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sise/bfs.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Bfs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sise/dfs.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Dfs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sise/Bfs.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Bfs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sise/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sise/Dfs.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Dfs.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sise/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sise/resources/initBoard.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sise/resources/initBoard.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +183,7 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/sise$main.coverage" NAME="main Coverage Results" MODIFIED="1742245186291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
+    <SUITE FILE_PATH="coverage/sise$main.coverage" NAME="main Coverage Results" MODIFIED="1742293079359" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$dfs.coverage" NAME="Dfs Coverage Results" MODIFIED="1742245150628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$bfs.coverage" NAME="bfs Coverage Results" MODIFIED="1742244216938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$ProgramOptions.coverage" NAME="ProgramOptions Coverage Results" MODIFIED="1742129216595" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />

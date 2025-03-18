@@ -4,13 +4,13 @@ import queue
 
 from Board import *
 
+#zminic get_possible_moves by przekazywac ostatni ruch
 
 def bfs(board, max_depth, permutation, depth = 0):
     path = ""
     que = queue.Queue()
     que.put((board, path , 0))
 
-    #zbiór odwiedzonych stanow
     visited = set()
     visited.add(tuple(map(tuple, board.getBoard())))
 
