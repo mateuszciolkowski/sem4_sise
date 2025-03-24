@@ -6,7 +6,7 @@ from Dfs import dfs
 from Bfs import bfs
 from ProgramOptions import ProgramOptions
 
-#ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANE
+#ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANEs
 # program_options = ProgramOptions.options()
 # program_options.print_options()
 
@@ -19,7 +19,6 @@ board = Board('resources/board.txt')
 board.print_board()
 
 permutation = ['R','D','U','L']
-# print(dfs(board,"",50,permutation))
-
+print(dfs(board,"",50,permutation))
 print(bfs(board,38,permutation))
 

@@ -10,6 +10,7 @@
       <change beforePath="$PROJECT_DIR$/sise/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sise/Dfs.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Dfs.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sise/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sise/resources/board.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sise/resources/board.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +38,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.Bfs.executor": "Run",
     "Python.Dfs.executor": "Run",
     "Python.ProgramOptions.executor": "Run",
     "Python.bfs.executor": "Run",
@@ -150,8 +152,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.Dfs" />
         <item itemvalue="Python.Bfs" />
+        <item itemvalue="Python.Dfs" />
         <item itemvalue="Python.ProgramOptions" />
       </list>
     </recent_temporary>
@@ -176,6 +178,7 @@
       <workItem from="1742125673065" duration="4464000" />
       <workItem from="1742134102732" duration="290000" />
       <workItem from="1742135115741" duration="52000" />
+      <workItem from="1742824213374" duration="2591000" />
     </task>
     <servers />
   </component>
@@ -183,9 +186,11 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/sise$main.coverage" NAME="main Coverage Results" MODIFIED="1742293079359" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
+    <SUITE FILE_PATH="coverage/sise$main.coverage" NAME="main Coverage Results" MODIFIED="1742826788341" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
+    <SUITE FILE_PATH="coverage/sise$Dfs.coverage" NAME="Dfs Coverage Results" MODIFIED="1742826054849" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$dfs.coverage" NAME="Dfs Coverage Results" MODIFIED="1742245150628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$bfs.coverage" NAME="bfs Coverage Results" MODIFIED="1742244216938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
+    <SUITE FILE_PATH="coverage/sise$Bfs.coverage" NAME="Bfs Coverage Results" MODIFIED="1742826767205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$ProgramOptions.coverage" NAME="ProgramOptions Coverage Results" MODIFIED="1742129216595" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
   </component>
 </project>

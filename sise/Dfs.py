@@ -24,7 +24,7 @@ def dfs(board, path, max_depth, permutation, depth = 0, visited = None):
         new_board = copy.deepcopy(board)
         new_board.move(direction)
         if direction in possible_moves and tuple(map(tuple, new_board.getBoard())) not in visited:
-            result = dfs(new_board,path + direction,max_depth,permutation,depth + 1)
+            result = dfs(new_board,path + direction,max_depth,permutation,depth + 1,visited)
             if result:
                 return result
     return None

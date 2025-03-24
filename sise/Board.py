@@ -1,9 +1,10 @@
 class Board:
     def __init__(self, filename):
         self.board = []
+        self.x_0 = None
+        self.y_0 = None
+        self.last_move = None
         self.load_from_file(filename)
-
-#pozycje 0 przechowywac w zmiennej
 
     def load_from_file(self, filename):
         with open(filename, 'r') as file:
@@ -13,6 +14,7 @@ class Board:
             for y in range(self.rows):
                 row = list(map(int, file.readline().split()))
                 self.board.append(row)
+        self.find_zero()
 
     def getBoard(self):
         return self.board
@@ -22,36 +24,45 @@ class Board:
             print(' '.join(map(str, row)))
 
     def move(self, direction):
-        y, x = self.find_zero()
-        if direction == 'U' and y > 0:
-            self.board[y][x], self.board[y - 1][x] = self.board[y - 1][x], self.board[y][x]
-        elif direction == 'D' and y < self.rows - 1:
-            self.board[y][x], self.board[y + 1][x] = self.board[y + 1][x], self.board[y][x]
-        elif direction == 'L' and x > 0:
-            self.board[y][x], self.board[y][x - 1] = self.board[y][x - 1], self.board[y][x]
-        elif direction == 'R' and x < self.cols - 1:
-            self.board[y][x], self.board[y][x + 1] = self.board[y][x + 1], self.board[y][x]
+        if direction == 'U' and self.y_0 > 0:
+            self.board[self.y_0][self.x_0], self.board[self.y_0 - 1][self.x_0] = self.board[self.y_0 - 1][self.x_0], self.board[self.y_0][self.x_0]
+            self.y_0 -= 1
+            self.last_move = "U"
+        elif direction == 'D' and self.y_0 < self.rows - 1:
+            self.board[self.y_0][self.x_0], self.board[self.y_0 + 1][self.x_0] = self.board[self.y_0 + 1][self.x_0], self.board[self.y_0][self.x_0]
+            self.y_0 += 1
+            self.last_move = "D"
+        elif direction == 'L' and self.x_0 > 0:
+            self.board[self.y_0][self.x_0], self.board[self.y_0][self.x_0 - 1] = self.board[self.y_0][self.x_0 - 1], self.board[self.y_0][self.x_0]
+            self.x_0 -= 1
+            self.last_move = "L"
+        elif direction == 'R' and self.x_0 < self.cols - 1:
+            self.board[self.y_0][self.x_0], self.board[self.y_0][self.x_0 + 1] = self.board[self.y_0][self.x_0 + 1], self.board[self.y_0][self.x_0]
+            self.x_0 += 1
+            self.last_move = "R"
 
     def find_zero(self):
         for y in range(self.rows):
             for x in range(self.cols):
                 if self.board[y][x] == 0:
-                    return (y, x)
-        return None
+                    self.x_0 = x
+                    self.y_0 = y
+                    return
 
     def get_possible_moves(self):
-        y, x = self.find_zero()
-
         possible_moves = []
 
-        if y > 0:
+        if self.y_0 > 0:
             possible_moves.append('U')
-        if y < self.rows - 1:
+        if self.y_0 < self.rows - 1:
             possible_moves.append('D')
-        if x > 0:
+        if self.x_0 > 0:
             possible_moves.append('L')
-        if x < self.cols - 1:
+        if self.x_0 < self.cols - 1:
             possible_moves.append('R')
+
+        if self.last_move in possible_moves:
+            possible_moves.remove(self.last_move)
 
         return possible_moves
 

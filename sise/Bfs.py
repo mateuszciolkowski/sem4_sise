@@ -1,21 +1,24 @@
 import copy
 from traceback import print_tb
 import queue
-
+from collections import deque
+# zrobic deque
 from Board import *
 
-#zminic get_possible_moves by przekazywac ostatni ruch
 
 def bfs(board, max_depth, permutation, depth = 0):
     path = ""
-    que = queue.Queue()
-    que.put((board, path , 0))
+    # que = queue.Queue()
+    # que.put((board, path , 0))
+    que = deque()
+    que.append((board,path,depth))
 
     visited = set()
     visited.add(tuple(map(tuple, board.getBoard())))
 
-    while que.qsize() != 0:
-        current_board, path, depth = que.get()
+
+    while que:
+        current_board, path, depth = que.popleft()
 
         if current_board.is_solved():
             return path
@@ -29,7 +32,7 @@ def bfs(board, max_depth, permutation, depth = 0):
             new_board.move(direction)
             if direction in possible_moves and tuple(map(tuple, new_board.getBoard())) not in visited:
                 visited.add(tuple(map(tuple, new_board.getBoard())))
-                que.put((new_board, path + direction, depth + 1))
+                que.append((new_board, path + direction, depth + 1))
 
     return None
 
