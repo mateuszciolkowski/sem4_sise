@@ -5,6 +5,8 @@ from Board import Board
 from Dfs import dfs
 from Bfs import bfs
 from ProgramOptions import ProgramOptions
+from A_star import a_star
+from sise.Statistics import Statistics
 
 #ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANEs
 # program_options = ProgramOptions.options()
@@ -24,4 +26,6 @@ permutation = ['R','D','U','L']
 bfs(board,20,permutation).to_string()
 print("")
 dfs(board,"",30,permutation).to_string()
-
+print("")
+statistics = Statistics()
+a_star(board,statistics).to_string()
