@@ -1,12 +1,11 @@
 # Przykład użycia
-from numpy.random import permutation
 import sys
 from Board import Board
 from Dfs import dfs
 from Bfs import bfs
 from ProgramOptions import ProgramOptions
-from A_star import a_star
-from sise.Statistics import Statistics
+from A_star import aStar
+from Statistics import Statistics
 
 #ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANEs
 # program_options = ProgramOptions.options()
@@ -28,4 +27,4 @@ print("")
 dfs(board,"",30,permutation).to_string()
 print("")
 statistics = Statistics()
-a_star(board,statistics).to_string()
+aStar(board,30,permutation).to_string()

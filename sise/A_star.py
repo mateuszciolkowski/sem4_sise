@@ -1,18 +1,55 @@
 from collections import deque
+import heapq
 import copy
 from Statistics import Statistics
 
+# f = q + h(board) - f = prioritise q = depth h(board) = odległość
 
-class State:
-    def __init__(self, board, zero_position, parent, move, g, h):
-        self.board = board  # Obiekt planszy
-        self.zero_position = zero_position  # Pozycja pustego kafelka
-        self.parent = parent  # Poprzedni stan
-        self.move = move  # Ruch, który doprowadził do tego stanu
-        self.g = g  # Koszt (liczba ruchów od stanu początkowego)
-        self.h = h  # Heurystyka (odległość Manhattan)
-        self.f = g + h  # Całkowity koszt (f = g + h)
+import heapq
+import copy
 
+def aStar(board, max_depth, permutation):
+    statistics = Statistics()
+    statistics.path = ""
+
+    queue = []
+    # Przygotowanie krotki, w której pierwszy element to f (koszt), a reszta to inne dane
+    heapq.heappush(queue, (0, 0, board, statistics.path))  # Krotka: (f, depth, board, path)
+    visited = set()
+
+    visited.add(str(board.getBoard()))
+
+    while queue:
+        f, depth, current_board, statistics.path = heapq.heappop(queue)
+
+        if current_board.is_solved():
+            statistics.stop_timer()
+            return statistics
+
+        if depth == max_depth:
+            return None
+
+        if depth > statistics.max_depth_reached:
+            statistics.max_depth_reached = depth
+
+        possible_moves = current_board.get_possible_moves()
+
+        for direction in permutation:
+            new_board = copy.deepcopy(current_board)
+            new_board.move(direction)
+
+            if direction in possible_moves and str(new_board.getBoard()) not in visited:
+                visited.add(str(new_board.getBoard()))
+                statistics.visited_states += 1
+                statistics.processed_states += 1
+
+                h = heuristic(new_board)
+                new_board.setPriority(h)
+                f = depth + 1 + h
+
+                heapq.heappush(queue, (f, depth + 1, new_board, statistics.path + direction))
+
+    return None
 
 def heuristic(board):
     """Oblicza heurystykę (odległość Manhattan) dla obecnego stanu"""
@@ -27,49 +64,3 @@ def heuristic(board):
                 goal_y, goal_x = goal_pos // board.cols, goal_pos % board.cols
                 h += abs(y - goal_y) + abs(x - goal_x)
     return h
-
-
-def a_star(board, statistics):
-    open_list = deque()
-    closed_list = set()
-
-    start_h = heuristic(board)
-    start_state = State(board, (board.x_0, board.y_0), None, None, 0, start_h)
-    open_list.append(start_state)
-
-    while open_list:
-        # Sortujemy kolejkę przed wyjęciem elementu o najniższym koszcie
-        open_list = deque(sorted(open_list, key=lambda x: x.f))
-
-        # Pobieramy stan z otwartej listy
-        current_state = open_list.popleft()
-
-        # Sprawdzamy, czy znaleźliśmy rozwiązanie
-        if current_state.h == 0:
-            path = []
-            while current_state.parent:
-                path.append(current_state.move)
-                current_state = current_state.parent
-            statistics.stop_timer()
-            statistics.path = ''.join(path[::-1])
-            return statistics
-
-        # Oznaczamy stan jako odwiedzony
-        closed_list.add(tuple(map(tuple, current_state.board.board)))
-        statistics.processed_states += 1
-
-        # Generujemy nowe stany na podstawie możliwych ruchów
-        possible_moves = current_state.board.get_possible_moves()
-        for direction in possible_moves:
-            new_board = copy.deepcopy(current_state.board)
-            new_board.move(direction)
-            new_h = heuristic(new_board)
-            new_g = current_state.g + 1
-            new_state = State(new_board, (new_board.x_0, new_board.y_0), current_state, direction, new_g, new_h)
-
-            if tuple(map(tuple, new_board.board)) not in closed_list:
-                open_list.append(new_state)
-                closed_list.add(tuple(map(tuple, new_board.board)))
-                statistics.visited_states += 1
-
-    return None
