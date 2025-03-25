@@ -5,6 +5,13 @@ class Board:
         self.y_0 = None
         self.last_move = None
         self.load_from_file(filename)
+        self.priority = 0
+
+    def __lt__(self, other):
+        return self.priority < other.priority
+
+    def setPriority(self, priority):
+        self.priority = priority
 
     def load_from_file(self, filename):
         with open(filename, 'r') as file:
