@@ -3,7 +3,7 @@ class Board:
         self.board = []
         self.x_0 = None
         self.y_0 = None
-        self.last_move = None
+        self.reversed_last_move = None
         self.load_from_file(filename)
         self.priority = 0
 
@@ -34,19 +34,19 @@ class Board:
         if direction == 'U' and self.y_0 > 0:
             self.board[self.y_0][self.x_0], self.board[self.y_0 - 1][self.x_0] = self.board[self.y_0 - 1][self.x_0], self.board[self.y_0][self.x_0]
             self.y_0 -= 1
-            self.last_move = "U"
+            self.reversed_last_move = "D"
         elif direction == 'D' and self.y_0 < self.rows - 1:
             self.board[self.y_0][self.x_0], self.board[self.y_0 + 1][self.x_0] = self.board[self.y_0 + 1][self.x_0], self.board[self.y_0][self.x_0]
             self.y_0 += 1
-            self.last_move = "D"
+            self.reversed_last_move = "U"
         elif direction == 'L' and self.x_0 > 0:
             self.board[self.y_0][self.x_0], self.board[self.y_0][self.x_0 - 1] = self.board[self.y_0][self.x_0 - 1], self.board[self.y_0][self.x_0]
             self.x_0 -= 1
-            self.last_move = "L"
+            self.reversed_last_move= "R"
         elif direction == 'R' and self.x_0 < self.cols - 1:
             self.board[self.y_0][self.x_0], self.board[self.y_0][self.x_0 + 1] = self.board[self.y_0][self.x_0 + 1], self.board[self.y_0][self.x_0]
             self.x_0 += 1
-            self.last_move = "R"
+            self.reversed_last_move = "L"
 
     def find_zero(self):
         for y in range(self.rows):
@@ -68,11 +68,9 @@ class Board:
         if self.x_0 < self.cols - 1:
             possible_moves.append('R')
 
-        opposite_moves = {'U': 'D', 'D': 'U', 'L': 'R', 'R': 'L'}
-        reversed_last_move = opposite_moves.get(self.last_move)
 
-        if reversed_last_move in possible_moves:
-            possible_moves.remove(reversed_last_move)
+        if self.reversed_last_move in possible_moves:
+            possible_moves.remove(self.reversed_last_move)
 
         return possible_moves
 
