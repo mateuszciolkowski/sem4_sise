@@ -2,7 +2,6 @@ import copy
 from traceback import print_tb
 import queue
 from collections import deque
-# zrobic deque
 from Board import *
 from Statistics import Statistics
 
@@ -25,7 +24,7 @@ def bfs(board, max_depth, permutation, depth = 0):
             statistics.stop_timer()
             return statistics
         if depth == max_depth:
-            continue
+            return None
         if depth > statistics.max_depth_reached:
             statistics.max_depth_reached = depth
 

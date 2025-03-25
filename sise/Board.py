@@ -61,8 +61,11 @@ class Board:
         if self.x_0 < self.cols - 1:
             possible_moves.append('R')
 
-        if self.last_move in possible_moves:
-            possible_moves.remove(self.last_move)
+        opposite_moves = {'U': 'D', 'D': 'U', 'L': 'R', 'R': 'L'}
+        reversed_last_move = opposite_moves.get(self.last_move)
+
+        if reversed_last_move in possible_moves:
+            possible_moves.remove(reversed_last_move)
 
         return possible_moves
 

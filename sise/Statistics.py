@@ -23,14 +23,14 @@ class Statistics:
         self.time_reached=time_end-self.time_start
 
     def to_string(self):
-        if self.path:
-            print("Path: "+self.path)
-            print("Path length: " + str(len(self.path)))
-        if self.max_depth_reached:
-            print("Max depth reached: "+str(self.max_depth_reached))
-        if self.visited_states:
-            print("Visited states: "+str(self.visited_states))
-        if self.processed_states:
-            print("Processed states: "+str(self.processed_states))
-        if self.time_reached:
-            print("Time reached: "+str(self.time_reached))
+            if self.path:
+                print("Path: "+self.path)
+                print("Path length: " + str(len(self.path)))
+            if self.max_depth_reached:
+                print("Max depth reached: "+str(self.max_depth_reached))
+            if self.visited_states:
+                print("Visited states: "+str(self.visited_states))
+            if self.processed_states:
+                print("Processed states: "+str(self.processed_states))
+            if self.time_reached:
+                print("Time reached: "+str(self.time_reached))
