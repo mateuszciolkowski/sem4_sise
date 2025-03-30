@@ -1,5 +1,7 @@
 class Board:
     def __init__(self, filename):
+        self.cols = None
+        self.rows = None
         self.board = []
         self.x_0 = None
         self.y_0 = None

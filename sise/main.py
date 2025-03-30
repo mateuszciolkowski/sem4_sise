@@ -22,9 +22,11 @@ print("")
 
 permutation = ['U','R','D','L']
 
-bfs(board,20,permutation).to_string()
-print("")
-dfs(board,"",32,permutation).to_string()
-print("")
+# bfs(board,20,permutation).to_string()
+# print("")
+# dfs(board,"",32,permutation).to_string()
+# print("")
 statistics = Statistics()
-aStar(board,30,permutation).to_string()
+aStar(board,30,permutation,"manh").to_string()
+print("\n")
+aStar(board,30,permutation,"hamm").to_string()
