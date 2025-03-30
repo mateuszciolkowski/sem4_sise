@@ -31,6 +31,7 @@ class ProgramOptions:
     def get_stats_file(self):
         return self.stats_file
 
+
     @staticmethod
     def options():
         if len(sys.argv) != 6:
@@ -59,3 +60,4 @@ class ProgramOptions:
             sys.exit(1)
 
         return ProgramOptions(strategy, order, initial_file, solution_file, stats_file)
+
