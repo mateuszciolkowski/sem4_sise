@@ -97,4 +97,6 @@ class Board:
 
         return correct_positions, wrong_positions
 
+    def undo_move(self, direction):
+        self.move(direction)
 

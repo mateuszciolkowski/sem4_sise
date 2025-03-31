@@ -5,7 +5,7 @@ from collections import deque
 from Board import *
 from Statistics import Statistics
 
-def bfs(board, max_depth, permutation, depth = 0):
+def bfs(board, max_depth, permutation, depth = 1):
     statistics = Statistics()
     statistics.path = ""
     # que = queue.Queue()

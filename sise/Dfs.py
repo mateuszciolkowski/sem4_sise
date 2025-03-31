@@ -1,48 +1,51 @@
-import copy
-from traceback import print_tb
 from Statistics import Statistics
-from Board import Board
 
 
-def dfs(board,path,max_depth, permutation, depth = 0, visited = None,statistics = None):
+def dfs(board, path, max_depth, permutation, depth=0, visited=None, statistics=None):
     if visited is None:
         visited = set()
         statistics = Statistics()
         path = ""
 
-    if board.is_solved() and statistics is not None:
+    # Sprawdzenie czy plansza jest już rozwiązana (czy to jedno-ruchowe rozwiązanie)
+    if board.is_solved():
         statistics.stop_timer()
         statistics.path = path
         return statistics
 
+    # Aktualizacja maksymalnej osiągniętej głębokości
     if depth > statistics.max_depth_reached:
         statistics.max_depth_reached = depth
 
     if depth == max_depth:
-        return None
+        return None  # Przekroczona maksymalna głębokość
 
+    # Użycie krotek zamiast stringów dla oszczędności pamięci
+    board_tuple = tuple(map(tuple, board.getBoard()))
 
-    current_board = board.getBoard()
-    # visited.add(tuple(map(tuple, current_board)))
-    if str(current_board) not in visited:
-        visited.add(str(current_board))  # Dodajemy stan do odwiedzonych
+    if board_tuple not in visited:
+        visited.add(board_tuple)
         statistics.processed_states += 1
 
     possible_moves = board.get_possible_moves()
 
+    # Iteracja po permutacjach kierunków
     for direction in permutation:
-        if direction is not board.reversed_last_move:
-            new_board = copy.deepcopy(board)
-            new_board.move(direction)
-        if direction in possible_moves and str(new_board.getBoard()) not in visited:
-            statistics.visited_states += 1  # Zwiększamy licznik odwiedzonych stanów
-            result = dfs(new_board,path + direction,max_depth,permutation,depth + 1,visited,statistics)
+        if direction in possible_moves:
+            board.move(direction)
+            new_board_tuple = tuple(map(tuple, board.getBoard()))
 
-            if result:
-                return result
+            # Sprawdzamy, czy stan nie był jeszcze odwiedzony
+            if new_board_tuple not in visited:
+                statistics.visited_states += 1
+                result = dfs(board, path + direction, max_depth, permutation, depth + 1, visited, statistics)
+
+                # Jeśli znaleziono rozwiązanie, natychmiast zwracamy wynik
+                if result:
+                    return result
+
+            # Cofnięcie ruchu (eliminacja deepcopy)
+            board.undo_move(direction)
+            print("undo")
+
     return None
-
-
-
-
-

@@ -24,10 +24,14 @@ def solve_board(program_options):
     solved_solutions(statistics,program_options.stats_file)
 
 
-def solved_statistics(statistics, output_statistics):
+def solved_statistics(statistics, output_statistics, automatic = 0):
     try:
-        os.makedirs("resources/output_statistics", exist_ok=True)
-        filepath = os.path.join("resources/output_statistics", output_statistics)
+        if automatic == 0:
+            os.makedirs("resources/output_statistics", exist_ok=True)
+            filepath = os.path.join("resources/output_statistics", output_statistics)
+        else:
+            os.makedirs("resources/output_statistics_boards", exist_ok=True)
+            filepath = os.path.join("resources/output_statistics_boards", output_statistics)
 
         with open(filepath, "w") as file:
             if statistics.path is None:
@@ -42,10 +46,14 @@ def solved_statistics(statistics, output_statistics):
         print(e)
 
 
-def solved_solutions(statistics, output_solutions):
+def solved_solutions(statistics, output_solutions,automatic = 0):
     try:
-        os.makedirs("resources/output_solutions", exist_ok=True)
-        filepath = os.path.join("resources/output_solutions", output_solutions)
+        if automatic == 0:
+            os.makedirs("resources/output_solutions", exist_ok=True)
+            filepath = os.path.join("resources/output_solutions", output_solutions)
+        else:
+            os.makedirs("resources/output_solutions_boards", exist_ok=True)
+            filepath = os.path.join("resources/output_solutions_boards", output_solutions)
 
         with open(filepath, "w") as file:
             if statistics.path is None:
@@ -87,19 +95,24 @@ def research_part():
             else:
                 move_categories["seven_move"].append(filename)
 
-    order_list = ['RDUL','RDLU','DRUL', 'DRLU','LUDR','LURD','ULDR','ULRD']
-
+    # order_list = ['RDUL','RDLU','DRUL', 'DRLU','LUDR','LURD','ULDR','ULRD']
+    order_list = ['DRUL']
     arithmetical_depth = []
     for category in move_categories:
         print(category)
         depth = 0
         for filename in move_categories[category]:
             print(filename)
-            board = Board(f"resources/boards/{filename}")
-            for order in order_list:
-                statistics = dfs(board,"",8,order)
-                if statistics.path is not None:
-                    depth += statistics.max_depth_reached
+            base_name = os.path.splitext(filename)[0]
+            if category == 'seven_move':
+                board = Board(f"resources/boards/{filename}")
+                for order in order_list:
+                    statistics = dfs(board,"",20,order)
+                    nazwa = f"{base_name}_dfs_{order}_stats.txt"
+                    solved_statistics(statistics, nazwa, automatic = True )
+                    nazwa = f"{base_name}_dfs_{order}_sol.txt"
+                    solved_solutions(statistics, nazwa, automatic = True )
+
         arithmetical_depth.append(depth/len(move_categories[category]))
     print(arithmetical_depth)
 
