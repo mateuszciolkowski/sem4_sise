@@ -118,11 +118,13 @@ def research_part():
                 # nazwa = f"{base_name}_dfs_{order}_sol.txt"
                 # solved_solutions(statistics, nazwa, automatic=True)
                 #
+
                 statistics = aStar(board,"manh")
                 nazwa = f"{base_name}_astr_manh_stats.txt"
                 solved_statistics(statistics, nazwa, automatic=True)
                 nazwa = f"{base_name}_astr_manh_sol.txt"
                 solved_solutions(statistics, nazwa, automatic=True)
+
 
                 statistics = aStar(board, "hamm")
                 nazwa = f"{base_name}_astr_hamm_stats.txt"
