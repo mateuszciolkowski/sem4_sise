@@ -10,7 +10,8 @@ from Solutions import solved_statistics, solve_board
 
 #ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANEs
 program_options = ProgramOptions.options()
-solve_board(program_options)
+if program_options is not None:
+    solve_board(program_options)
 
 #DO TESTOW
 # program bfs RDUL 4x4_01_0001.txt 4x4_01_0001_bfs_rdul_sol.txt 4x4_01_0001_bfs_rdul_stats.txt
