@@ -5,7 +5,7 @@ import copy
 # f = q + h(board) - f = prioritise q = depth h(board) = odległość
 
 
-def aStar(board, max_depth,heuristic):
+def aStar(board,heuristic):
     statistics = Statistics()
     statistics.path = ""
 
@@ -27,8 +27,8 @@ def aStar(board, max_depth,heuristic):
         if depth > statistics.max_depth_reached:
             statistics.max_depth_reached = depth
 
-        if depth == max_depth:
-            return None
+        # if depth == max_depth:
+        #     return None
 
 
         possible_moves = current_board.get_possible_moves()

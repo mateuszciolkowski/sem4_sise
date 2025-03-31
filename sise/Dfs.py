@@ -41,8 +41,3 @@ def dfs(board,path,max_depth, permutation, depth = 0, visited = None,statistics 
             if result:
                 return result
     return None
-
-
-
-
-

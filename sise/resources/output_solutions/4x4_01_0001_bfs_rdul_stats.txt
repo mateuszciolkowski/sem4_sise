@@ -1,2 +1,2 @@
-Length of finded solution: 1
-D
+Length of finded solution: 3
+DRR

@@ -5,7 +5,7 @@ from collections import deque
 from Board import *
 from Statistics import Statistics
 
-def bfs(board, max_depth, permutation, depth = 0):
+def bfs(board, permutation, depth = 1):
     statistics = Statistics()
     statistics.path = ""
     # que = queue.Queue()
@@ -28,8 +28,8 @@ def bfs(board, max_depth, permutation, depth = 0):
         if depth > statistics.max_depth_reached:
             statistics.max_depth_reached = depth
 
-        if depth == max_depth:
-            return None
+        # if depth == max_depth:
+        #     return None
 
         possible_moves = current_board.get_possible_moves()
 

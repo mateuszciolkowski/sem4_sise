@@ -8,26 +8,31 @@ from Bfs import *
 from Dfs import *
 from A_star import *
 
+
 def solve_board(program_options):
     board = Board(f"resources/input_board/{program_options.initial_file}")
     board.print_board()
     if program_options.strategy == "bfs":
-        statistics = bfs(board,20,program_options.order)
+        statistics = bfs(board, 20, program_options.order)
     elif program_options.strategy == "dfs":
-        statistics = dfs(board,"",32,program_options.order)
+        statistics = dfs(board, "", 32, program_options.order)
     elif program_options.strategy == "astr":
-        statistics = aStar(board,30,program_options.order)
+        statistics = aStar(board, 30, program_options.order)
     else:
         return None
 
-    solved_statistics(statistics,program_options.solution_file)
-    solved_solutions(statistics,program_options.stats_file)
+    solved_statistics(statistics, program_options.solution_file)
+    solved_solutions(statistics, program_options.stats_file)
 
 
-def solved_statistics(statistics, output_statistics):
+def solved_statistics(statistics, output_statistics, automatic=0):
     try:
-        os.makedirs("resources/output_statistics", exist_ok=True)
-        filepath = os.path.join("resources/output_statistics", output_statistics)
+        if automatic == 0:
+            os.makedirs("resources/output_statistics", exist_ok=True)
+            filepath = os.path.join("resources/output_statistics", output_statistics)
+        else:
+            os.makedirs("resources/output_statistics_boards", exist_ok=True)
+            filepath = os.path.join("resources/output_statistics_boards", output_statistics)
 
         with open(filepath, "w") as file:
             if statistics.path is None:
@@ -42,19 +47,24 @@ def solved_statistics(statistics, output_statistics):
         print(e)
 
 
-def solved_solutions(statistics, output_solutions):
+def solved_solutions(statistics, output_solutions, automatic=0):
     try:
-        os.makedirs("resources/output_solutions", exist_ok=True)
-        filepath = os.path.join("resources/output_solutions", output_solutions)
+        if automatic == 0:
+            os.makedirs("resources/output_solutions", exist_ok=True)
+            filepath = os.path.join("resources/output_solutions", output_solutions)
+        else:
+            os.makedirs("resources/output_solutions_boards", exist_ok=True)
+            filepath = os.path.join("resources/output_solutions_boards", output_solutions)
 
         with open(filepath, "w") as file:
             if statistics.path is None:
                 file.write("Length of finded solution: -1\n")
             else:
-                file.write("Length of finded solution: "+str(len(statistics.path))+"\n")
+                file.write("Length of finded solution: " + str(len(statistics.path)) + "\n")
             file.write(statistics.path)
     except Exception as e:
         print(e)
+
 
 def research_part():
     # dzielenie plansz ze wzgledu na ilosc ruchów wykonanych do tworzenia wykresów
@@ -88,18 +98,34 @@ def research_part():
                 move_categories["seven_move"].append(filename)
 
     order_list = ['RDUL','RDLU','DRUL', 'DRLU','LUDR','LURD','ULDR','ULRD']
-
-    arithmetical_depth = []
+    # order_list = ['DRUL']
     for category in move_categories:
         print(category)
-        depth = 0
         for filename in move_categories[category]:
             print(filename)
+            base_name = os.path.splitext(filename)[0]
             board = Board(f"resources/boards/{filename}")
             for order in order_list:
-                statistics = dfs(board,"",8,order)
-                if statistics.path is not None:
-                    depth += statistics.max_depth_reached
-        arithmetical_depth.append(depth/len(move_categories[category]))
-    print(arithmetical_depth)
+                statistics = bfs(board,order)
+                nazwa = f"{base_name}_bfs_{order}_stats.txt"
+                solved_statistics(statistics, nazwa, automatic=True)
+                nazwa = f"{base_name}_bfs_{order}_sol.txt"
+                solved_solutions(statistics, nazwa, automatic=True)
 
+                # statistics = dfs(board, "",20, order)
+                # nazwa = f"{base_name}_dfs_{order}_stats.txt"
+                # solved_statistics(statistics, nazwa, automatic=True)
+                # nazwa = f"{base_name}_dfs_{order}_sol.txt"
+                # solved_solutions(statistics, nazwa, automatic=True)
+                #
+                statistics = aStar(board,"manh")
+                nazwa = f"{base_name}_astr_manh_stats.txt"
+                solved_statistics(statistics, nazwa, automatic=True)
+                nazwa = f"{base_name}_astr_manh_sol.txt"
+                solved_solutions(statistics, nazwa, automatic=True)
+
+                statistics = aStar(board, "hamm")
+                nazwa = f"{base_name}_astr_hamm_stats.txt"
+                solved_statistics(statistics, nazwa, automatic=True)
+                nazwa = f"{base_name}_astr_hamm_sol.txt"
+                solved_solutions(statistics, nazwa, automatic=True)

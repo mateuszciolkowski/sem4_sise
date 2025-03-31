@@ -172,3 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+output_solutions/
+output_solutions_boards/
+output_statistics/
+output_statistics_doards/

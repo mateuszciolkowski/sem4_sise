@@ -11,6 +11,8 @@ class Statistics:
         self.path = ""
         self.max_depth_reached = 0
 
+        self.isSolved = False
+
         self.visited_states = 0
         self.processed_states = 0
 
