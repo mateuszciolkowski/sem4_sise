@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="580bbb3e-b248-4a07-ad93-fddd292068d3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sise/A_star.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/A_star.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sise/Statistics.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Statistics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sise/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sise/Solutions.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/Solutions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sise/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/sise/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,29 +34,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.A_star.executor": "Run",
-    "Python.Bfs.executor": "Run",
-    "Python.Dfs.executor": "Run",
-    "Python.ProgramOptions.executor": "Run",
-    "Python.Solutions.executor": "Run",
-    "Python.bfs.executor": "Run",
-    "Python.dfs.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.wizualization.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "E:/sise/pythonProject/sem4_sise",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.A_star.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Bfs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Dfs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ProgramOptions.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Solutions.executor&quot;: &quot;Run&quot;,
+    &quot;Python.bfs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dfs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.wizualization.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/sise/pythonProject/sem4_sise&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/sise/resources/input_board" />
@@ -248,7 +249,7 @@
     <SUITE FILE_PATH="coverage/sise$ProgramOptions.coverage" NAME="ProgramOptions Coverage Results" MODIFIED="1742129216595" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$Solutions.coverage" NAME="Solutions Coverage Results" MODIFIED="1743346213492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$A_star.coverage" NAME="A_star Coverage Results" MODIFIED="1743344618905" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
-    <SUITE FILE_PATH="coverage/sem4_sise$main.coverage" NAME="main Coverage Results" MODIFIED="1743458487449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
+    <SUITE FILE_PATH="coverage/sem4_sise$main.coverage" NAME="main Coverage Results" MODIFIED="1743706455055" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$Dfs.coverage" NAME="Dfs Coverage Results" MODIFIED="1742897325896" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$dfs.coverage" NAME="Dfs Coverage Results" MODIFIED="1742245150628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />
     <SUITE FILE_PATH="coverage/sise$bfs.coverage" NAME="bfs Coverage Results" MODIFIED="1742244216938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sise" />

@@ -1,21 +1,19 @@
-# Przykład użycia
-import sys
-
-from numpy.random import permutation
-
-from Board import Board
-from Bfs import bfs
 from ProgramOptions import ProgramOptions
-from A_star import aStar
 from Statistics import Statistics
-from Solutions import solved_statistics, solve_board
+from Solutions import solved_statistics, solve_board,get_files_by_type,sort_files_permutations,sort_by_moves
 
 #ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANEs
-program_options = ProgramOptions.options()
-if program_options is not None:
-    solve_board(program_options)
+
+# program_options = ProgramOptions.options()
+# if program_options is not None:
+#     solve_board(program_options)
 
 
+bfs_files = get_files_by_type("bfs")
+sorted_files = sort_files_permutations(bfs_files)
+
+# for key, files in sorted_files.items():
+#     print(f"{key}: {files}")
 
 
 #DO TESTOW

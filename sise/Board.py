@@ -107,17 +107,3 @@ class Board:
                     wrong_positions += 1
 
         return correct_positions, wrong_positions
-
-    def undo_move(self):
-        self.move(self.reversed_last_move)
-
-    def copy(self):
-        new_board = Board.__new__(Board)  # Tworzymy nowy, pusty obiekt klasy Board
-        new_board.cols = self.cols
-        new_board.rows = self.rows
-        new_board.board = copy.deepcopy(self.board)  # Głęboka kopia tablicy
-        new_board.x_0 = self.x_0
-        new_board.y_0 = self.y_0
-        new_board.reversed_last_move = self.reversed_last_move
-        new_board.priority = self.priority
-        return new_board

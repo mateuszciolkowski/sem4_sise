@@ -1,5 +1,7 @@
 import itertools
 import os
+
+
 from ProgramOptions import *
 from Statistics import *
 from A_star import aStar
@@ -67,7 +69,6 @@ def solved_solutions(statistics, output_solutions, automatic=0):
 
 
 def research_part():
-    # dzielenie plansz ze wzgledu na ilosc ruchów wykonanych do tworzenia wykresów
     move_categories = {
         "one_move": [],
         "two_move": [],
@@ -131,3 +132,60 @@ def research_part():
                 # solved_statistics(statistics, nazwa, automatic=True)
                 # nazwa = f"{base_name}_astr_hamm_sol.txt"
                 # solved_solutions(statistics, nazwa, automatic=True)
+
+
+def file_reader(filename):
+    filepath = os.path.join("resources/output_statistics_boards", filename)
+    table = []
+    with open(filepath, "r") as file:
+        for line in file:
+            word = line.strip().split()
+            table.append(word[-1])
+    return table
+
+
+def get_files_by_type(type):
+        folder = "resources/output_statistics_boards"
+        return [file for file in os.listdir(folder) if type in file]
+
+
+def sort_files_permutations(file_table):
+    file_list = {
+        "RDUL": [],
+        "RDLU": [],
+        "DRUL": [],
+        "DRLU": [],
+        "LUDR": [],
+        "LURD": [],
+        "ULDR": [],
+        "ULRD": [],
+    }
+
+    for file in file_table:
+        for permutation in file_list.keys():
+            if permutation in file:
+                file_list[permutation].append(file)
+                break
+
+    return file_list
+
+def sort_by_moves(table):
+    moves_list = {
+        "4x4_01": [],
+        "4x4_02": [],
+        "4x4_03": [],
+        "4x4_04": [],
+        "4x4_05": [],
+        "4x4_06": [],
+        "4x4_07": []
+    }
+    for file in moves_list:
+        for permutation in moves_list.keys():
+            if permutation in file:
+                moves_list[permutation].append(file)
+                break
+
+    return moves_list
+
+def cos(table):
+    return None
