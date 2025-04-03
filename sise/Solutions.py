@@ -106,28 +106,28 @@ def research_part():
             base_name = os.path.splitext(filename)[0]
             board = Board(f"resources/boards/{filename}")
             for order in order_list:
-                statistics = bfs(board,order)
-                nazwa = f"{base_name}_bfs_{order}_stats.txt"
-                solved_statistics(statistics, nazwa, automatic=True)
-                nazwa = f"{base_name}_bfs_{order}_sol.txt"
-                solved_solutions(statistics, nazwa, automatic=True)
-
-                # statistics = dfs(board, "",20, order)
-                # nazwa = f"{base_name}_dfs_{order}_stats.txt"
+                # statistics = bfs(board,order)
+                # nazwa = f"{base_name}_bfs_{order}_stats.txt"
                 # solved_statistics(statistics, nazwa, automatic=True)
-                # nazwa = f"{base_name}_dfs_{order}_sol.txt"
+                # nazwa = f"{base_name}_bfs_{order}_sol.txt"
                 # solved_solutions(statistics, nazwa, automatic=True)
-                #
 
-                statistics = aStar(board,"manh")
-                nazwa = f"{base_name}_astr_manh_stats.txt"
+                statistics = dfs(board, 20, order)
+                nazwa = f"{base_name}_dfs_{order}_stats.txt"
                 solved_statistics(statistics, nazwa, automatic=True)
-                nazwa = f"{base_name}_astr_manh_sol.txt"
+                nazwa = f"{base_name}_dfs_{order}_sol.txt"
                 solved_solutions(statistics, nazwa, automatic=True)
 
 
-                statistics = aStar(board, "hamm")
-                nazwa = f"{base_name}_astr_hamm_stats.txt"
-                solved_statistics(statistics, nazwa, automatic=True)
-                nazwa = f"{base_name}_astr_hamm_sol.txt"
-                solved_solutions(statistics, nazwa, automatic=True)
+                # statistics = aStar(board,"manh")
+                # nazwa = f"{base_name}_astr_manh_stats.txt"
+                # solved_statistics(statistics, nazwa, automatic=True)
+                # nazwa = f"{base_name}_astr_manh_sol.txt"
+                # solved_solutions(statistics, nazwa, automatic=True)
+
+
+                # statistics = aStar(board, "hamm")
+                # nazwa = f"{base_name}_astr_hamm_stats.txt"
+                # solved_statistics(statistics, nazwa, automatic=True)
+                # nazwa = f"{base_name}_astr_hamm_sol.txt"
+                # solved_solutions(statistics, nazwa, automatic=True)

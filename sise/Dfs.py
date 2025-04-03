@@ -2,42 +2,43 @@ import copy
 from traceback import print_tb
 from Statistics import Statistics
 from Board import Board
+from collections import deque
 
 
-def dfs(board,path,max_depth, permutation, depth = 0, visited = None,statistics = None):
-    if visited is None:
-        visited = set()
-        statistics = Statistics()
-        path = ""
+def dfs(board,max_depth, permutation):
+    statistics = Statistics()
+    statistics.path = ""
+    depth = 0
 
-    if board.is_solved() and statistics is not None:
-        statistics.stop_timer()
-        statistics.path = path
-        return statistics
+    stack = deque()
+    stack.append((board,statistics.path,depth))
 
-    if depth > statistics.max_depth_reached:
-        statistics.max_depth_reached = depth
+    visited = set()
+    # visited.add(str(board.getBoard(),depth))
+    visited.add((tuple(map(tuple, board.getBoard())), depth))
 
-    if depth == max_depth:
-        return None
-
-
-    current_board = board.getBoard()
-    # visited.add(tuple(map(tuple, current_board)))
-    if str(current_board) not in visited:
-        visited.add(str(current_board))  # Dodajemy stan do odwiedzonych
+    while stack:
+        current_board,statistics.path,depth = stack.pop()
         statistics.processed_states += 1
 
-    possible_moves = board.get_possible_moves()
+        if depth > statistics.max_depth_reached:
+            statistics.max_depth_reached = depth
 
-    for direction in permutation:
-        if direction is not board.reversed_last_move:
-            new_board = copy.deepcopy(board)
+        if current_board.is_solved():
+            statistics.stop_timer()
+            return statistics
+
+        if depth == max_depth:
+            continue
+
+        for direction in permutation:
+            new_board = copy.deepcopy(current_board)
             new_board.move(direction)
-        if direction in possible_moves and str(new_board.getBoard()) not in visited:
-            statistics.visited_states += 1  # Zwiększamy licznik odwiedzonych stanów
-            result = dfs(new_board,path + direction,max_depth,permutation,depth + 1,visited,statistics)
+            board_state = tuple(map(tuple, new_board.getBoard()))
+            if direction in current_board.get_possible_moves() and (board_state,depth) not in visited:
+                visited.add((board_state,depth))
+                statistics.visited_states += 1
 
-            if result:
-                return result
+                stack.append((new_board,statistics.path + direction,depth+1))
+
     return None

@@ -1,6 +1,5 @@
 import copy
 from traceback import print_tb
-import queue
 from collections import deque
 from Board import *
 from Statistics import Statistics
