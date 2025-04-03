@@ -1,5 +1,6 @@
 import itertools
 import os
+import glob
 
 
 from ProgramOptions import *
@@ -83,17 +84,17 @@ def research_part():
         if entry.is_file():
             filename = entry.name
 
-            if "4x4_01" in filename:
-                move_categories["one_move"].append(filename)
-            elif "4x4_02" in filename:
-                move_categories["two_move"].append(filename)
-            elif "4x4_03" in filename:
-                move_categories["three_move"].append(filename)
-            elif "4x4_04" in filename:
-                move_categories["four_move"].append(filename)
-            elif "4x4_05" in filename:
-                move_categories["five_move"].append(filename)
-            elif "4x4_06" in filename:
+            # if "4x4_01" in filename:
+            #     move_categories["one_move"].append(filename)
+            # elif "4x4_02" in filename:
+            #     move_categories["two_move"].append(filename)
+            # elif "4x4_03" in filename:
+            #     move_categories["three_move"].append(filename)
+            # elif "4x4_04" in filename:
+            #     move_categories["four_move"].append(filename)
+            # elif "4x4_05" in filename:
+            #     move_categories["five_move"].append(filename)
+            if "4x4_06" in filename:
                 move_categories["six_move"].append(filename)
             else:
                 move_categories["seven_move"].append(filename)
@@ -107,11 +108,11 @@ def research_part():
             base_name = os.path.splitext(filename)[0]
             board = Board(f"resources/boards/{filename}")
             for order in order_list:
-                # statistics = bfs(board,order)
-                # nazwa = f"{base_name}_bfs_{order}_stats.txt"
-                # solved_statistics(statistics, nazwa, automatic=True)
-                # nazwa = f"{base_name}_bfs_{order}_sol.txt"
-                # solved_solutions(statistics, nazwa, automatic=True)
+                statistics = bfs(board,order)
+                nazwa = f"{base_name}_bfs_{order}_stats.txt"
+                solved_statistics(statistics, nazwa, automatic=True)
+                nazwa = f"{base_name}_bfs_{order}_sol.txt"
+                solved_solutions(statistics, nazwa, automatic=True)
 
                 statistics = dfs(board, 20, order)
                 nazwa = f"{base_name}_dfs_{order}_stats.txt"
@@ -120,72 +121,49 @@ def research_part():
                 solved_solutions(statistics, nazwa, automatic=True)
 
 
-                # statistics = aStar(board,"manh")
-                # nazwa = f"{base_name}_astr_manh_stats.txt"
-                # solved_statistics(statistics, nazwa, automatic=True)
-                # nazwa = f"{base_name}_astr_manh_sol.txt"
-                # solved_solutions(statistics, nazwa, automatic=True)
+                statistics = aStar(board,"manh")
+                nazwa = f"{base_name}_astr_manh_stats.txt"
+                solved_statistics(statistics, nazwa, automatic=True)
+                nazwa = f"{base_name}_astr_manh_sol.txt"
+                solved_solutions(statistics, nazwa, automatic=True)
 
 
-                # statistics = aStar(board, "hamm")
-                # nazwa = f"{base_name}_astr_hamm_stats.txt"
-                # solved_statistics(statistics, nazwa, automatic=True)
-                # nazwa = f"{base_name}_astr_hamm_sol.txt"
-                # solved_solutions(statistics, nazwa, automatic=True)
+                statistics = aStar(board, "hamm")
+                nazwa = f"{base_name}_astr_hamm_stats.txt"
+                solved_statistics(statistics, nazwa, automatic=True)
+                nazwa = f"{base_name}_astr_hamm_sol.txt"
+                solved_solutions(statistics, nazwa, automatic=True)
 
 
-def file_reader(filename):
-    filepath = os.path.join("resources/output_statistics_boards", filename)
+def file_reader(phrase_a,phrase_b,phrase_c):
+    folder_path = "resources/output_statistics_boards"
+
+    pattern = os.path.join(folder_path, f"*{phrase_a}*{phrase_b}*{phrase_c}*")
+    files = glob.glob(pattern)
+
     table = []
-    with open(filepath, "r") as file:
-        for line in file:
-            word = line.strip().split()
-            table.append(word[-1])
-    return table
 
 
-def get_files_by_type(type):
-        folder = "resources/output_statistics_boards"
-        return [file for file in os.listdir(folder) if type in file]
+    for filepath in files:
+        values = []
+        with open(filepath, "r") as file:
+            for line in file:
+                word = line.strip().split()
+                values.append(word[-1])
+            table.append(values)
+
+    # 0 --> length of path
+    # 1 --> visited_states
+    # 2 --> processed_states
+    # 3 --> max_depth
+    # 4 --> time
+    average_table = []
+    for i in range(len(values)):
+       average_table.append(get_average(table,i))
+    print(table)
+    return average_table
 
 
-def sort_files_permutations(file_table):
-    file_list = {
-        "RDUL": [],
-        "RDLU": [],
-        "DRUL": [],
-        "DRLU": [],
-        "LUDR": [],
-        "LURD": [],
-        "ULDR": [],
-        "ULRD": [],
-    }
-
-    for file in file_table:
-        for permutation in file_list.keys():
-            if permutation in file:
-                file_list[permutation].append(file)
-                break
-
-    return file_list
-
-def sort_by_moves(table):
-    moves_list = {
-        "4x4_01": [],
-        "4x4_02": [],
-        "4x4_03": [],
-        "4x4_04": [],
-        "4x4_05": [],
-        "4x4_06": [],
-        "4x4_07": []
-    }
-    for file in moves_list:
-        for permutation in moves_list.keys():
-            if permutation in file:
-                moves_list[permutation].append(file)
-                break
-
-    return moves_list
-
-def cos(table):
-    return None
+def get_average(table_with_data,index):
+    column_sum = sum(float(row[index]) for row in table_with_data)
+    return column_sum / len(table_with_data)

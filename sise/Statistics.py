@@ -22,7 +22,7 @@ class Statistics:
 
     def stop_timer(self):
         time_end=time.time()
-        self.time_reached=time_end-self.time_start
+        self.time_reached=round((time_end-self.time_start) * 1000,3)
 
     def to_string(self):
             if self.path:
