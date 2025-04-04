@@ -11,14 +11,13 @@ from Bfs import *
 from Dfs import *
 from A_star import *
 
-
 def solve_board(program_options):
     board = Board(f"resources/input_board/{program_options.initial_file}")
     board.print_board()
     if program_options.strategy == "bfs":
         statistics = bfs(board, 20, program_options.order)
     elif program_options.strategy == "dfs":
-        statistics = dfs(board, "", 32, program_options.order)
+        statistics = dfs(board, 20, program_options.order)
     elif program_options.strategy == "astr":
         statistics = aStar(board, 30, program_options.order)
     else:

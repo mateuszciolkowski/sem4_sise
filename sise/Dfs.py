@@ -14,8 +14,8 @@ def dfs(board,max_depth, permutation):
     stack.append((board,statistics.path,depth))
 
     visited = set()
-    # visited.add(str(board.getBoard(),depth))
-    visited.add((tuple(map(tuple, board.getBoard())), depth))
+    visited.add((str(board.getBoard()), depth))
+    # visited.add((tuple(map(tuple, board.getBoard())), depth))
 
     while stack:
         current_board,statistics.path,depth = stack.pop()
@@ -32,10 +32,10 @@ def dfs(board,max_depth, permutation):
             continue
 
         for direction in permutation:
-            new_board = copy.deepcopy(current_board)
+            new_board = current_board.clone()
             new_board.move(direction)
-            board_state = tuple(map(tuple, new_board.getBoard()))
-            if direction in current_board.get_possible_moves() and (board_state,depth) not in visited:
+            board_state = str(new_board.getBoard())
+            if direction in current_board.get_possible_moves() and (board_state,depth) not in visited :
                 visited.add((board_state,depth))
                 statistics.visited_states += 1
 

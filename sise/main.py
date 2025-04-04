@@ -1,6 +1,6 @@
 from ProgramOptions import ProgramOptions
 from Statistics import Statistics
-from Solutions import file_reader
+from Solutions import file_reader, solve_board
 
 #ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANEs
 

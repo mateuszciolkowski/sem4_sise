@@ -9,8 +9,9 @@ class Board:
         self.x_0 = None
         self.y_0 = None
         self.reversed_last_move = None
-        self.load_from_file(filename)
         self.priority = 0
+        if filename:
+            self.load_from_file(filename)
 
     def __lt__(self, other):
         return self.priority < other.priority
@@ -22,6 +23,16 @@ class Board:
 
     def __hash__(self):
         return hash((self.board,self.reversed_last_move))
+
+    def clone(self):
+        new_board = Board(None)
+        new_board.board = [row[:] for row in self.board]
+        new_board.reversed_last_move = self.reversed_last_move
+        new_board.x_0 = self.x_0
+        new_board.y_0 = self.y_0
+        new_board.rows = self.rows
+        new_board.cols = self.cols
+        return new_board
 
     def setPriority(self, priority):
         self.priority = priority
