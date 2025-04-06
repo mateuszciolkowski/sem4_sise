@@ -1,12 +1,12 @@
 from ProgramOptions import ProgramOptions
 from Statistics import Statistics
-from Solutions import file_reader, solve_board
+from Solutions import *
 
 #ODCZYT ARGUMENTOW FUNKCJI I WYPISANIE JAKIE ZOSTALY PODANEs
 
-program_options = ProgramOptions.options()
-if program_options is not None:
-    solve_board(program_options)
+# program_options = ProgramOptions.options()
+# if program_options is not None:
+#     solve_board(program_options)
 
 
 # bfs_files = get_files_by_type("bfs")
@@ -36,3 +36,6 @@ if program_options is not None:
 # aStar(board,30,permutation,"hamm").to_string()
 
 # print(file_reader("4x4_07","bfs","*"))
+# print(results_bfs_by_permutations())
+# print(results_manh())
+print(plot_all_criteria())
