@@ -10,6 +10,12 @@ class Board:
         if filename:
             self.load_from_file(filename)
 
+    """
+    Metoda specjalna w Pythonie: `__lt__` oznacza "less than" (mniej niż).
+        używana do porównywania obiektów za pomocą operatora `<`.
+        Porównuje wartość priority, 
+    Używana w heapq - każdy element musi być porównywalny =
+    """
     def __lt__(self, other):
         return self.priority < other.priority
 
@@ -109,7 +115,11 @@ class Board:
 
         for y in range(self.rows):
             for x in range(self.cols):
-                if self.board[y][x] == correct_solution[y][x]:
+                current_value = self.board[y][x]
+                expected_value = correct_solution[y][x]
+                if current_value == 0:
+                    continue
+                if current_value == expected_value:
                     correct_positions += 1
                 else:
                     wrong_positions += 1

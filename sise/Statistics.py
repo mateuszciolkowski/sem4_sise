@@ -10,8 +10,7 @@ class Statistics:
     def __init__(self):
         self.path = ""
         self.max_depth_reached = 0
-
-        self.isSolved = False
+        self.found = False
 
         self.visited_states = 0
         self.processed_states = 0

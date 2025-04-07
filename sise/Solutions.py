@@ -11,7 +11,7 @@ def solve_board(program_options):
     board = Board(f"resources/input_board/{program_options.initial_file}")
     board.print_board()
     if program_options.strategy == "bfs":
-        statistics = bfs(board, 20, program_options.order)
+        statistics = bfs(board, program_options.order)
     elif program_options.strategy == "dfs":
         statistics = dfs(board, 20, program_options.order)
     elif program_options.strategy == "astr":
@@ -33,7 +33,7 @@ def solved_statistics(statistics, output_statistics, automatic=0):
             filepath = os.path.join("resources/output_statistics_boards", output_statistics)
 
         with open(filepath, "w") as file:
-            if statistics.path is None:
+            if not statistics.found:
                 file.write("Length of finded solution: -1\n")
             else:
                 file.write("Length of finded solution: " + str(len(statistics.path)) + "\n")
@@ -55,11 +55,11 @@ def solved_solutions(statistics, output_solutions, automatic=0):
             filepath = os.path.join("resources/output_solutions_boards", output_solutions)
 
         with open(filepath, "w") as file:
-            if statistics.path is None:
+            if not statistics.found:
                 file.write("Length of finded solution: -1\n")
             else:
                 file.write("Length of finded solution: " + str(len(statistics.path)) + "\n")
-            file.write(statistics.path)
+                file.write(statistics.path)
     except Exception as e:
         print(e)
 
@@ -108,11 +108,11 @@ def research_part():
                 nazwa = f"{base_name}_bfs_{order}_sol.txt"
                 solved_solutions(statistics, nazwa, automatic=True)
 
-                # statistics = dfs(board, 20, order)
-                # nazwa = f"{base_name}_dfs_{order}_stats.txt"
-                # solved_statistics(statistics, nazwa, automatic=True)
-                # nazwa = f"{base_name}_dfs_{order}_sol.txt"
-                # solved_solutions(statistics, nazwa, automatic=True)
+                statistics = dfs(board, 20, order)
+                nazwa = f"{base_name}_dfs_{order}_stats.txt"
+                solved_statistics(statistics, nazwa, automatic=True)
+                nazwa = f"{base_name}_dfs_{order}_sol.txt"
+                solved_solutions(statistics, nazwa, automatic=True)
 
                 statistics = aStar(board, "manh")
                 nazwa = f"{base_name}_astr_manh_stats.txt"
@@ -262,7 +262,7 @@ def plot_all_criteria():
 
     for crit_index in range(num_criteria):
         fig, axs = plt.subplots(2, 2, figsize=(12, 8))
-        fig.suptitle(f'Kryterium: {criteria_labels[crit_index]}', fontsize=16)
+        fig.suptitle(f'Średnia arytmetyczna: {criteria_labels[crit_index]}', fontsize=16)
         bar_width = 0.25
         x = np.array(depths)
 

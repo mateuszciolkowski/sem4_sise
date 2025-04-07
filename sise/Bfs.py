@@ -1,13 +1,32 @@
-import copy
 from collections import deque
 from Statistics import Statistics
 
-def bfs(board, permutation, depth = 0):
+"""
+    Algorytm przeszukiwania wszerz z podaną permutacją.
+    Uzupełnia path, visited_states, max_depth_reached,processed_states,time,found
+    w obiekcie statystyk
+    
+        Zwracany jest obiekt statistics przy powodzeniu i niepowodzeniu.
+    
+"""
+
+def bfs(board, permutation, max_level = 20):
     statistics = Statistics()
     statistics.path = ""
-    que = deque()
-    que.append((board,statistics.path,depth))
 
+    """
+          deque() 
+              pusta kolejna dwukierunkowa - funkcja popleft() 
+    """
+
+    que = deque()
+    que.append((board,statistics.path,0))
+
+    """
+         set() 
+             przechowuje unikalne elementy zbioru danych 
+             szybkie sprawdzanie, czy coś już istnieje w zbiorze (O(1) średnio)
+    """
     visited = set()
     visited.add(str(board.getBoard()))
 
@@ -20,12 +39,15 @@ def bfs(board, permutation, depth = 0):
 
         if current_board.is_solved():
             statistics.stop_timer()
+            statistics.found = True
             return statistics
+
+        if max_level == statistics.max_depth_reached:
+            break
 
         possible_moves = current_board.get_possible_moves()
 
         for direction in permutation:
-            # new_board = copy.deepcopy(current_board)
             new_board = current_board.clone()
             new_board.move(direction)
             if direction in possible_moves and str(new_board.getBoard()) not in visited:
@@ -34,7 +56,8 @@ def bfs(board, permutation, depth = 0):
 
                 que.append((new_board, statistics.path + direction, depth + 1))
 
-    return None
+    statistics.stop_timer()
+    return statistics
 
 
 
