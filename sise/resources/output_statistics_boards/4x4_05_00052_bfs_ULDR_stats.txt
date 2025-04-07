@@ -2,4 +2,4 @@ Length of finded solution: 5
 Visited states: 170
 Processed states: 82
 Max depth: 5
-Time to solve: 0.644
+Time to solve: 0.657

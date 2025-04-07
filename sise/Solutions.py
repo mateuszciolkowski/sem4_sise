@@ -263,30 +263,36 @@ def plot_all_criteria():
     for crit_index in range(num_criteria):
         fig, axs = plt.subplots(2, 2, figsize=(12, 8))
         fig.suptitle(f'Kryterium: {criteria_labels[crit_index]}', fontsize=16)
+        bar_width = 0.25
+        x = np.array(depths)
 
         # 1. Ogólne porównanie: BFS vs DFS vs A*
         bfs_vals = [bfs_results[k][crit_index] for k in keys]
         dfs_vals = [dfs_results[k][crit_index] for k in keys]
         astar_vals = [(hamm_results[k][crit_index] + manh_results[k][crit_index]) / 2 for k in keys]
 
-        axs[0, 0].bar(depths, bfs_vals, width=0.25, label='BFS', align='center')
-        axs[0, 0].bar([d + 0.25 for d in depths], dfs_vals, width=0.25, label='DFS')
-        axs[0, 0].bar([d + 0.5 for d in depths], astar_vals, width=0.25, label='A*')
+        axs[0, 0].bar(x - bar_width, bfs_vals, width=bar_width, label='BFS')  # -0.25
+        axs[0, 0].bar(x, dfs_vals, width=bar_width, label='DFS')  # środek
+        axs[0, 0].bar(x + bar_width, astar_vals, width=bar_width, label='A*')  # +0.25
         axs[0, 0].set_title("Ogółem")
         axs[0, 0].legend()
         axs[0, 0].set_xlabel("Głębokość")
         axs[0, 0].set_ylabel(criteria_labels[crit_index])
-        axs[0, 0].set_yscale("log")  # <-- Skala logarytmiczna
+        axs[0, 0].set_yscale("log")  # Skala logarytmiczna
+        axs[0, 0].set_xticks(x)  # Centrowanie opisu na środku grupy słupków
+        axs[0, 0].set_xticklabels(depths)
 
         # 2. A*: Hamming vs Manhattan
         hamm_vals = [hamm_results[k][crit_index] for k in keys]
         manh_vals = [manh_results[k][crit_index] for k in keys]
 
-        axs[0, 1].bar(depths, hamm_vals, width=0.35, label='Hamming', align='center')
-        axs[0, 1].bar([d + 0.35 for d in depths], manh_vals, width=0.35, label='Manhattan')
+        axs[0, 1].bar(x - bar_width / 2, hamm_vals, width=bar_width, label='Hamming')
+        axs[0, 1].bar(x + bar_width / 2, manh_vals, width=bar_width, label='Manhattan')
         axs[0, 1].set_title("A*")
         axs[0, 1].legend()
         axs[0, 1].set_xlabel("Głębokość")
+        axs[0, 1].set_xticks(x)
+        axs[0, 1].set_xticklabels(depths)
         # 3. BFS - różne kolejności ruchów (słupki względem permutacji)
         bar_width = 0.1
         x = np.arange(len(depths))
@@ -316,3 +322,5 @@ def plot_all_criteria():
         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
         plt.savefig(f'kryterium_{crit_index + 1}.png')
         plt.close()
+
+
