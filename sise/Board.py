@@ -1,6 +1,3 @@
-import copy
-
-
 class Board:
     def __init__(self, filename):
         self.cols = None
@@ -16,13 +13,13 @@ class Board:
     def __lt__(self, other):
         return self.priority < other.priority
 
-    def __eq__(self, other):
-        if not isinstance(other, Board):
-            return False
-        return self.board == other.board and self.reversed_last_move == other.reversed_last_move
-
-    def __hash__(self):
-        return hash((self.board,self.reversed_last_move))
+    # def __eq__(self, other):
+    #     if not isinstance(other, Board):
+    #         return False
+    #     return self.board == other.board and self.reversed_last_move == other.reversed_last_move
+    #
+    # def __hash__(self):
+    #     return hash((self.board,self.reversed_last_move))
 
     def clone(self):
         new_board = Board(None)

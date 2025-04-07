@@ -1,9 +1,5 @@
-import copy
-from traceback import print_tb
 from Statistics import Statistics
-from Board import Board
 from collections import deque
-
 
 def dfs(board,max_depth, permutation):
     statistics = Statistics()

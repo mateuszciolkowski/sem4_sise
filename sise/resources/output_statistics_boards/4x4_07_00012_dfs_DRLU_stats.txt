@@ -1,0 +1,5 @@
+Length of finded solution: 19
+Visited states: 117001
+Processed states: 116984
+Max depth: 20
+Time to solve: 902.912

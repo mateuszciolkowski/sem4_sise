@@ -1,7 +1,5 @@
 import copy
-from traceback import print_tb
 from collections import deque
-from Board import *
 from Statistics import Statistics
 
 def bfs(board, permutation, depth = 0):
@@ -27,7 +25,8 @@ def bfs(board, permutation, depth = 0):
         possible_moves = current_board.get_possible_moves()
 
         for direction in permutation:
-            new_board = copy.deepcopy(current_board)
+            # new_board = copy.deepcopy(current_board)
+            new_board = current_board.clone()
             new_board.move(direction)
             if direction in possible_moves and str(new_board.getBoard()) not in visited:
                 visited.add(str(new_board.getBoard()))

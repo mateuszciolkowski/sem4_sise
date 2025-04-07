@@ -1,8 +1,5 @@
-import sys
-
-from Solutions import *
 import Solutions
-
+import sys
 
 class ProgramOptions:
     def __init__(self, strategy, order, initial_file, solution_file, stats_file):

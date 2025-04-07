@@ -4,7 +4,6 @@ import copy
 
 # f = q + h(board) - f = prioritise q = depth h(board) = odległość
 
-
 def aStar(board,heuristic):
     statistics = Statistics()
     statistics.path = ""
@@ -34,7 +33,7 @@ def aStar(board,heuristic):
         possible_moves = current_board.get_possible_moves()
 
         for direction in possible_moves:
-            new_board = copy.deepcopy(current_board)
+            new_board = current_board.clone()
             new_board.move(direction)
 
 
@@ -45,7 +44,7 @@ def aStar(board,heuristic):
                 if heuristic == "hamm":
                     h = heuristic_hamming(new_board)
                 elif heuristic == "manh":
-                    h = heuristic_manhattan(current_board)
+                    h = heuristic_manhattan(new_board)
                 else:
                     print("zła heurystyka")
                     return None

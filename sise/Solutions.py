@@ -1,20 +1,11 @@
-import itertools
 import os
 import glob
-from tkinter.font import names
-
 import numpy as np
-from matplotlib import pyplot as plt
-from unicodedata import category
-
-from ProgramOptions import *
-from Statistics import *
-from A_star import aStar
-from Board import Board
 from Bfs import *
 from Dfs import *
 from A_star import *
-
+from Board import *
+from matplotlib import pyplot as plt
 
 def solve_board(program_options):
     board = Board(f"resources/input_board/{program_options.initial_file}")
@@ -24,7 +15,7 @@ def solve_board(program_options):
     elif program_options.strategy == "dfs":
         statistics = dfs(board, 20, program_options.order)
     elif program_options.strategy == "astr":
-        statistics = aStar(board, 30, program_options.order)
+        statistics = aStar(board, program_options.order)
     else:
         return None
 
@@ -106,7 +97,7 @@ def research_part():
     order_list = ['RDUL', 'RDLU', 'DRUL', 'DRLU', 'LUDR', 'LURD', 'ULDR', 'ULRD']
     for category in move_categories:
         print(category)
-        for filename in move_categories["seven_move"]:
+        for filename in move_categories[category]:
             print(filename)
             base_name = os.path.splitext(filename)[0]
             board = Board(f"resources/boards/{filename}")
@@ -117,11 +108,11 @@ def research_part():
                 nazwa = f"{base_name}_bfs_{order}_sol.txt"
                 solved_solutions(statistics, nazwa, automatic=True)
 
-                statistics = dfs(board, 20, order)
-                nazwa = f"{base_name}_dfs_{order}_stats.txt"
-                solved_statistics(statistics, nazwa, automatic=True)
-                nazwa = f"{base_name}_dfs_{order}_sol.txt"
-                solved_solutions(statistics, nazwa, automatic=True)
+                # statistics = dfs(board, 20, order)
+                # nazwa = f"{base_name}_dfs_{order}_stats.txt"
+                # solved_statistics(statistics, nazwa, automatic=True)
+                # nazwa = f"{base_name}_dfs_{order}_sol.txt"
+                # solved_solutions(statistics, nazwa, automatic=True)
 
                 statistics = aStar(board, "manh")
                 nazwa = f"{base_name}_astr_manh_stats.txt"

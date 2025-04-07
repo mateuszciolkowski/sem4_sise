@@ -1,0 +1,5 @@
+Length of finded solution: 20
+Visited states: 350885
+Processed states: 350873
+Max depth: 20
+Time to solve: 2688.689
