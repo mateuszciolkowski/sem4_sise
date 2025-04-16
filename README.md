@@ -1,1 +1,2 @@
-# sem4_sise
+Repozytorium Sztuczna Inteligencja i Systemy Ekspertowe
+

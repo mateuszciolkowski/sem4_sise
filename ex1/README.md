@@ -1,1 +1,1 @@
-# sem4_sise
+Projekt analizuje wydajność algorytmów BFS, DFS oraz A* (z heurystykami Hamming i Manhattan) w rozwiązywaniu układanki 15-puzzli, mierząc liczbę odwiedzonych i przetworzonych stanów, maksymalne zużycie pamięci, czas działania oraz długość rozwiązania.
