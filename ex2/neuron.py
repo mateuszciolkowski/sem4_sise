@@ -2,11 +2,12 @@ import random
 import math
 
 class Neuron:
-    def __init__(self, number_of_inputs, activation_function):
-        self.weights = [random.uniform(-0.5, 0.5) for _ in range(number_of_inputs)]  # Losowe wagi
-        self.bias = random.uniform(-0.5, 0.5)  # Losowe obciążenie
+    def __init__(self, number_of_inputs, activation_function, bias_usage = False):
+        self.weights = [random.uniform(-1, 1) for _ in range(number_of_inputs)]  # Losowe wagi
         self.activation_function = activation_function  # Funkcja aktywacji
         self.output = None  # Wyjście neuronu
+        if bias_usage:
+            self.bias = random.uniform(-0.5, 0.5)  # Losowe obciążenie
 
     def forward(self, inputs):
         #Propagacja w przód - oblicza wyjście neuronu na podstawie wejść.
