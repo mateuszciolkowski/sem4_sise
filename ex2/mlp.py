@@ -1,6 +1,10 @@
 from layer import *
 
 class MLP:
+    """
+    learning_rate -- wspolczynnik nauki
+    use_momentum -- przelacznik czy uzyc momentum
+    """
     def __init__(self, layer_sizes, activation_function, activation_derivative,
                  learning_rate=0.1, bias=0.0, use_momentum=False, momentum=0.9):
         self.layers = []
@@ -9,10 +13,15 @@ class MLP:
         self.learning_rate = learning_rate
         self.bias = bias
         self.use_momentum = use_momentum
-        self.momentum = momentum
+        if self.use_momentum:
+            self.momentum = momentum
 
+        #warstwa wejsciowa sa dane nie ma reprezentacji layer
+        #tworzenie warstw w ktorych kazda z nich ma okreslona liczbe neuronow
         for i in range(1, len(layer_sizes)):
             self.layers.append(
+                #layer_sizes[i] -- ilosc neuronow w warstwie
+                #layer_sizes[i-1] -- ilosc neuronow w warstwie poprzedniej
                 Layer(layer_sizes[i], layer_sizes[i - 1], activation_function, activation_derivative, bias))
 
     def forward(self, inputs):
@@ -75,15 +84,4 @@ class MLP:
     def predict(self, X):
         return [self.forward(inputs) for inputs in X]
 
-#TO DO propagacja wstecz i w przod
-#W każdej epoce prezentowane są sieci wszystkie wzorce treningowe,
-#przy czym program powinien udostępniać możliwość wyboru pomiędzy
-# niezmienną oraz losową kolejnością ich prezentacji.
 
-
-#Program ma także umożliwiać określenie, czy w trakcie nauki ma być
-# uwzględniany człon momentum, czy nie.
-
-# W każdej epoce prezentowane są sieci wszystkie wzorce treningowe,
-# przy czym program powinien udostępniać możliwość wyboru pomiędzy
-# niezmienną oraz losową kolejnością ich prezentacji.

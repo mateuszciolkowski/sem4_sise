@@ -1,19 +1,18 @@
 from mlp import MLP  # lub bezpośrednio, jeśli masz w tym samym pliku
 import numpy as np
-from data import load_iris
+from data import load_iris, load_auto_association
 from utils import *
 
-# Załaduj dane
 X, Y = load_iris("data/iris/iris.data", standarded=True)
+# X, Y = load_auto_association()
 
-# Zainicjuj sieć MLP
 mlp = MLP(
     layer_sizes=[4, 5, 3],  # 4 wejścia (cechy), 5 neuronów ukrytych, 3 wyjścia (klasy)
     activation_function=sigmoid,
     activation_derivative=sigmoid_derivative
 )
 
-# Parametry uczenia (dodaj do klasy MLP lub ustaw ręcznie)
+# Parametry uczenia
 mlp.learning_rate = 0.1
 mlp.use_bias = True
 mlp.use_momentum = True

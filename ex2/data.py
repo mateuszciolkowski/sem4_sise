@@ -29,3 +29,20 @@ def load_iris(fileName, standarded = False):
         X = scaler.fit_transform(X)
 
     return X, Y
+
+
+
+def load_auto_association(standarded = False):
+    inputs = [
+        (1, 0, 0, 0),
+        (0, 1, 0, 0),
+        (0, 0, 1, 0),
+        (0, 0, 0, 1)
+    ]
+
+    outputs = inputs  # To samo co wejścia
+
+    X = np.array(inputs)
+    Y = np.array(outputs)
+
+    return X, Y
