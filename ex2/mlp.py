@@ -85,3 +85,24 @@ class MLP:
         return [self.forward(inputs) for inputs in X]
 
 
+#TO DO zapis sieci do pliku
+# zapis wag ktore zostaly nauczone ?
+# do zrobienia tryb testowania predcit propagacja w przod
+# podzielic dane jakies irysow by moc testowac
+# moze zobaczyc jak dzialalo to na KAD przy knn
+
+#ZOBACZYC CZY TAK TO U NAS DZIALA
+# Sekwencja czynności, która zostaje wykonana dla pojedynczego wzorca,
+# wygląda tu następująco: wzorzec treningowy podawany jest na wejścia sieci,
+# następnie odbywa się jego propagacja w przód, dalej na podstawie wartości
+# odpowiedzi wygenerowanej przez sieć oraz wartości pożądanego wzorca odpowiedzi
+# następuje wyznaczenie błędów, po czym propagowane są one wstecz, na koniec zaś
+# ma miejsce wprowadzenie poprawek na wagi.
+
+#Czas trwania nauki powinien być determinowany albo zrealizowaniem wprowadzonej przez użytkownika liczby epok,
+#albo osiągnięciem przez sieć podanego przez użytkownika poziomu błędu (należy jednak umożliwić tu zatrzymanie
+# nauki w pewnym momencie, gdyby założony poziom błędu okazał się nieosiągalny), albo spełnieniem któregokolwiek
+# warunku z dwóch wymienionych.
+
+#EPOKI SA trzeba dodac zatrzeymaneie przez blad lub zatrzymanie w dowolnym momencie np
+
