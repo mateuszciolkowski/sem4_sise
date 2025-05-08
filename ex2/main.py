@@ -1,25 +1,3 @@
-# from mlp import MLP  # lub bezpośrednio, jeśli masz w tym samym pliku
-# from data import load_iris, load_auto_association
-# from utils import *
-#
-# X, Y = load_iris("data/iris/iris.data", standarded=True)
-# # X, Y = load_auto_association()
-#
-# mlp = MLP(
-#     layer_sizes=[4, 5, 3],  # 4 wejścia (cechy), 5 neuronów ukrytych, 3 wyjścia (klasy)
-#     activation_function=sigmoid,
-#     activation_derivative=sigmoid_derivative
-# )
-#
-# # Parametry uczenia
-# mlp.learning_rate = 0.1
-# mlp.use_bias = True
-# mlp.use_momentum = True
-# mlp.momentum = 0.9
-#
-# # Trenuj sieć
-# mlp.train(X, Y, epochs=10000, shuffle=True)
-
 import numpy as np
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.model_selection import train_test_split
@@ -35,24 +13,23 @@ def main():
     mlp = MLP(layer_sizes=[4, 5, 3], activation_function=sigmoid, activation_derivative=sigmoid_derivative,learning_rate=0.1,use_momentum=True,momentum=0.9)
 
     # Trenuj sieć
-    mlp.train(X_train, y_train, epochs=1000, error_threshold=0.01, log_interval=10)
+    mlp.train(X_train, y_train, epochs=1000, error_threshold=0.00001, log_interval=10)
     mlp.save_log_of_learning(10,"network_log.json")
     plot_error_curve(mlp.epoch_errors)
     mlp.save_to_file("network.json")
     mlp_restored = mlp.load_from_file("network.json",sigmoid, sigmoid_derivative)
 
-
+    y_true = np.argmax(y_test, axis=1)
     # outputs = mlp.predict(X_test)
-    outputs = mlp_restored.predict(X_test)
+    outputs = mlp_restored.predict_with_logging(X_test, y_true)
 
     # Konwersja predykcji (argmax) i etykiet rzeczywistych
     y_pred = np.argmax(outputs, axis=1)
-    y_true = np.argmax(y_test, axis=1)
-
-    # Ocena
+    #
+    # # Ocena
     print("\nConfusion Matrix:")
     print(confusion_matrix(y_true, y_pred))
-
+    #
     print("\nClassification Report:")
     print(classification_report(y_true, y_pred, target_names=["setosa", "versicolor", "virginica"]))
 

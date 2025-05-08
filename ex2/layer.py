@@ -1,9 +1,9 @@
 from neuron import *
 
 class Layer:
-    def __init__(self, number_of_neurons, number_of_inputs, activation_function, activation_derivative, bias=0.0):
+    def __init__(self, number_of_neurons, number_of_inputs, activation_function, activation_derivative, bias=0.0, is_processing=True):
         self.neurons = [
-            Neuron(number_of_inputs, activation_function, activation_derivative, bias)
+            Neuron(number_of_inputs, activation_function, activation_derivative, bias, is_processing)
             for _ in range(number_of_neurons)
         ]
 

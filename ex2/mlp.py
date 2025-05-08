@@ -1,9 +1,9 @@
 import random
 import numpy as np
 import json
-from sklearn.metrics import confusion_matrix, precision_recall_fscore_support, accuracy_score
 from datetime import datetime
 from layer import Layer
+import os
 
 class MLP:
     def __init__(self, layer_sizes, activation_function, activation_derivative,
@@ -17,9 +17,17 @@ class MLP:
         self.use_momentum = use_momentum
         self.momentum = momentum if use_momentum else 0.0
 
+        # Kolejne warstwy (ukryte i wyjściowe) - z neuronami, które przetwarzają dane
         for i in range(1, len(layer_sizes)):
             self.layers.append(
-                Layer(layer_sizes[i], layer_sizes[i - 1], activation_function, activation_derivative, bias)
+                Layer(
+                    number_of_neurons=layer_sizes[i],  # Liczba neuronów danej warstwy
+                    number_of_inputs=layer_sizes[i - 1],  # Liczba wejść z poprzedniej warstwy
+                    activation_function=activation_function,
+                    activation_derivative=activation_derivative,
+                    bias=bias,
+                    is_processing=True  # Przetwarza dane
+                )
             )
 
     def forward(self, inputs):
@@ -94,7 +102,6 @@ class MLP:
                 print(f"No improvement for {max_no_improvement_epochs} epochs. Stopping training.")
                 break
 
-
     def save_log_of_learning(self, interval, filename="log_filename.json"):
         filename = f"data/mlp/{filename}"
         log_data = []
@@ -109,24 +116,6 @@ class MLP:
 
     def predict(self, X):
         return [self.forward(inputs) for inputs in X]
-
-    def evaluate(self, X_test, y_test):
-        predictions = self.predict(X_test)
-        y_true = np.argmax(y_test, axis=1)
-        y_pred = np.argmax(predictions, axis=1)
-
-        acc = accuracy_score(y_true, y_pred)
-        print(f"Accuracy: {acc * 100:.2f}%")
-
-        cm = confusion_matrix(y_true, y_pred)
-        print("Confusion Matrix:")
-        print(cm)
-
-        precision, recall, f1_score, _ = precision_recall_fscore_support(y_true, y_pred, average=None)
-        for i in range(len(precision)):
-            print(f"Class {i}: Precision={precision[i]:.2f}, Recall={recall[i]:.2f}, F1={f1_score[i]:.2f}")
-
-        return acc, cm, precision, recall, f1_score
 
     def save_to_file(self, filename=None):
         if filename is None:
@@ -178,48 +167,131 @@ class MLP:
 
         return mlp
 
+    # def predict_with_logging(self, X, y_true=None, log_filename="predict_log.json",
+    #                          weights_filename="weights_log.json",
+    #                          log_inputs=True, log_output_values=True,
+    #                          log_desired_output=True, log_output_errors=True,
+    #                          log_hidden_values=True, log_output_weights=True,
+    #                          log_hidden_weights=True):
+    #     outputs = []
+    #     log_dir = "data/mlp/logs"
+    #     os.makedirs(log_dir, exist_ok=True)
+    #
+    #     # Struktura danych do zapisania w pliku JSON
+    #     log_data = []
+    #
+    #     for i, inputs in enumerate(X):
+    #         sample_log = {"sample": i + 1}
+    #         output = self.forward(inputs)
+    #         outputs.append(output)
+    #
+    #         if log_inputs:
+    #             sample_log["inputs"] = inputs.tolist() if isinstance(inputs, np.ndarray) else inputs
+    #
+    #         # Logowanie wartości wyjściowych (predykcji)
+    #         if log_output_values:
+    #             sample_log["predicted_output"] = output.tolist() if isinstance(output, np.ndarray) else output
+    #
+    #         # Logowanie oczekiwanych wyników i błędów
+    #         if y_true is not None:
+    #             expected_class = y_true[i]
+    #             expected = [1 if j == expected_class else 0 for j in range(len(output))]
+    #             error_vector = [t - o for t, o in zip(expected, output)]
+    #             if log_desired_output:
+    #                 sample_log["expected_output"] = expected
+    #             if log_output_errors:
+    #                 sample_log["output_errors"] = error_vector
+    #                 total_error = sum(e ** 2 for e in error_vector)
+    #                 sample_log["total_error"] = total_error
+    #
+    #         # Logowanie wartości ukrytych neuronów
+    #         if log_hidden_values:
+    #             hidden_outputs = [
+    #                 [neuron.output for neuron in layer.neurons]
+    #                 for layer in self.layers[:-1]
+    #             ]
+    #             sample_log["hidden_layer_outputs"] = hidden_outputs
+    #
+    #         log_data.append(sample_log)
+    #
+    #     with open(f"{log_dir}/{log_filename}", "w") as log_file:
+    #         json.dump(log_data, log_file, indent=4)
+    #
+    #     weights_data = []
+    #
+    #     for layer_idx, layer in enumerate(self.layers):
+    #         layer_data = {"layer": layer_idx + 1, "neurons": []}
+    #         for neuron_idx, neuron in enumerate(layer.neurons):
+    #             neuron_data = {
+    #                 "neuron": neuron_idx + 1,
+    #                 "weights": neuron.weights,
+    #                 "bias": neuron.bias
+    #             }
+    #             layer_data["neurons"].append(neuron_data)
+    #         weights_data.append(layer_data)
+    #
+    #     with open(f"{log_dir}/{weights_filename}", "w") as weight_file:
+    #         json.dump(weights_data, weight_file, indent=4)
+    #
+    #     print(f"Logowanie zakończone. Dane zapisano do folderu {log_dir}")
+    #     return outputs
 
-#TO DO zapis sieci do pliku
-# zapis wag ktore zostaly nauczone ? - NIE KUMAM TROCHE O CO CHODZI Z ZAPISEM WAG
-# do zrobienia tryb testowania predcit propagacja w przod - TEGO NIE MA?
-# podzielic dane jakies irysow by moc testowac - ZROBIONY TRAINER JAKO KLASA DO WYWOŁYWANIA W MAINIE
-# moze zobaczyc jak dzialalo to na KAD przy knn
+    def predict_with_logging(self, X, y_true=None, log_filename="predict_log.txt",
+                             weights_filename="weights_log.txt",
+                             log_inputs=True, log_output_values=True,
+                             log_desired_output=True, log_output_errors=True,
+                             log_hidden_values=True, log_output_weights=True,
+                             log_hidden_weights=True):
+        outputs = []
+        log_dir = "data/mlp/logs"
+        os.makedirs(log_dir, exist_ok=True)
 
-# RACZEJ DZIAŁA - TAK MI SIE WYDAJE
-#ZOBACZYC CZY TAK TO U NAS DZIALA
-# Sekwencja czynności, która zostaje wykonana dla pojedynczego wzorca,
-# wygląda tu następująco: wzorzec treningowy podawany jest na wejścia sieci,
-# następnie odbywa się jego propagacja w przód, dalej na podstawie wartości
-# odpowiedzi wygenerowanej przez sieć oraz wartości pożądanego wzorca odpowiedzi
-# następuje wyznaczenie błędów, po czym propagowane są one wstecz, na koniec zaś
-# ma miejsce wprowadzenie poprawek na wagi.
+        with open(f"{log_dir}/{log_filename}", "w") as log_file:
+            for i, inputs in enumerate(X):
+                output = self.forward(inputs)
+                outputs.append(output)
+                log_file.write(f"Sample {i + 1}:\n")
+
+                # Logowanie danych wejściowych
+                if log_inputs:
+                    log_file.write(f"  Inputs: {inputs.tolist() if isinstance(inputs, np.ndarray) else inputs}\n")
+
+                # Logowanie wartości wyjściowych (predykcji)
+                if log_output_values:
+                    log_file.write(
+                        f"  Predicted Output: {output.tolist() if isinstance(output, np.ndarray) else output}\n")
+
+                # Logowanie oczekiwanych wyników i błędów
+                if y_true is not None:
+                    expected_class = y_true[i]
+                    expected = [1 if j == expected_class else 0 for j in range(len(output))]
+                    error_vector = [t - o for t, o in zip(expected, output)]
+                    if log_desired_output:
+                        log_file.write(f"  Expected Output: {expected}\n")
+                    if log_output_errors:
+                        log_file.write(f"  Output Errors: {error_vector}\n")
+                        total_error = sum(e ** 2 for e in error_vector)
+                        log_file.write(f"  Total Error: {total_error}\n")
+
+                # Logowanie wartości ukrytych neuronów
+                if log_hidden_values:
+                    hidden_outputs = [
+                        [neuron.output for neuron in layer.neurons]
+                        for layer in self.layers[:-1]
+                    ]
+                    log_file.write(f"  Hidden Layer Outputs: {hidden_outputs}\n")
+
+                log_file.write("\n")  # Oddzielenie między próbkami
+
+        # Zapis wag dla poszczególnych neuronów
+        with open(f"{log_dir}/{weights_filename}", "w") as weight_file:
+            for layer_idx, layer in enumerate(self.layers):
+                weight_file.write(f"\nLayer {layer_idx + 1}:\n")
+                for neuron_idx, neuron in enumerate(layer.neurons):
+                    weight_file.write(f"  Neuron {neuron_idx + 1} weights: {neuron.weights}\n")
+                    weight_file.write(f"  \t\t bias: {neuron.bias}\n")
+
+        print(f"Logowanie zakończone. Dane zapisano do folderu {log_dir}")
+        return outputs
 
 
-#DONE
-#Czas trwania nauki powinien być determinowany albo zrealizowaniem wprowadzonej przez użytkownika liczby epok,
-#albo osiągnięciem przez sieć podanego przez użytkownika poziomu błędu (należy jednak umożliwić tu zatrzymanie
-# nauki w pewnym momencie, gdyby założony poziom błędu okazał się nieosiągalny), albo spełnieniem któregokolwiek
-# warunku z dwóch wymienionych.
-
-# BRAK ZATRZYMANIA W DOWOLNYM MOMENCIE, ZATRZYMANIE POPRZEZ BRAK POPRAWY WYNIKU total_error - jeśli był podany błąd
-#EPOKI SA trzeba dodac zatrzeymaneie przez blad lub zatrzymanie w dowolnym momencie np
-
-#TO CHECK co zrobione
-#TO DO CHYBA
-
-#1
-#WCZYTYWANIE I ODZCYTYWANIE Z PLIKOW SIECI
-#2
-#WCZYTYWANIE ZESTAWOW WZORCOW?
-#3
-#Logowanie mocniejsze do pliku
-# rejestrowanie do pliku pewnych wielkości,
-# a mianowicie: wzorca wejściowego, popełnionego
-# przez sieć błędu dla całego wzorca,
-# pożądanego wzorca odpowiedzi,
-# błędów popełnionych na poszczególnych wyjściach sieci,
-# wartości wyjściowych neuronów wyjściowych,
-# wag neuronów wyjściowych,
-# wartości wyjściowych neuronów ukrytych,
-# wag neuronów ukrytych (w kolejności warstw od dalszych względem wejść sieci do bliższych).
-# Ewentualnie program może umożliwiać użytkownikowi wybór tylko niektórych spośród nich do rejestracji w danym przebiegu.
