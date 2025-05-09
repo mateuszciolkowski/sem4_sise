@@ -17,6 +17,8 @@ class MLP:
         self.use_momentum = use_momentum
         self.momentum = momentum if use_momentum else 0.0
 
+
+
         # Kolejne warstwy (ukryte i wyjściowe) - z neuronami, które przetwarzają dane
         for i in range(1, len(layer_sizes)):
             self.layers.append(
@@ -78,6 +80,7 @@ class MLP:
 
             total_error = 0
             for inputs, target in samples:
+
                 outputs = self.forward(inputs)
                 self.backward(target)
                 self.update_weights(inputs)
