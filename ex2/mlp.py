@@ -6,8 +6,8 @@ from layer import Layer
 import os
 
 class MLP:
-    def __init__(self, layer_sizes, activation_function, activation_derivative,
-                 learning_rate=0.1, bias=0.0, use_momentum=False, momentum=0.9):
+    def __init__(self, layer_sizes, activation_function, activation_derivative, learning_rate=0.1, use_momentum=False, momentum=0.0, bias=0.0):
+        self.layer_sizes = layer_sizes  # Dodanie atrybutu layer_sizes
         self.epoch_errors = None
         self.layers = []
         self.activation_function = activation_function
