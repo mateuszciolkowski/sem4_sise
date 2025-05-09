@@ -120,7 +120,7 @@ class MLP:
     def save_to_file(self, filename=None):
         if filename is None:
             filename = "network_" + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + ".pkl"
-        filename = f"data/mlp/{filename}"
+        filename = f"data/mlp/saved_network/{filename}"
 
         model_data = {
             "learning_rate": self.learning_rate,
@@ -146,7 +146,7 @@ class MLP:
 
     @staticmethod
     def load_from_file(filename, activation_function, activation_derivative):
-        filename = f"data/mlp/{filename}"
+        filename = f"data/mlp/saved_network/{filename}"
         with open(filename, "r") as f:
             data = json.load(f)
 
@@ -167,77 +167,8 @@ class MLP:
 
         return mlp
 
-    # def predict_with_logging(self, X, y_true=None, log_filename="predict_log.json",
-    #                          weights_filename="weights_log.json",
-    #                          log_inputs=True, log_output_values=True,
-    #                          log_desired_output=True, log_output_errors=True,
-    #                          log_hidden_values=True, log_output_weights=True,
-    #                          log_hidden_weights=True):
-    #     outputs = []
-    #     log_dir = "data/mlp/logs"
-    #     os.makedirs(log_dir, exist_ok=True)
-    #
-    #     # Struktura danych do zapisania w pliku JSON
-    #     log_data = []
-    #
-    #     for i, inputs in enumerate(X):
-    #         sample_log = {"sample": i + 1}
-    #         output = self.forward(inputs)
-    #         outputs.append(output)
-    #
-    #         if log_inputs:
-    #             sample_log["inputs"] = inputs.tolist() if isinstance(inputs, np.ndarray) else inputs
-    #
-    #         # Logowanie wartości wyjściowych (predykcji)
-    #         if log_output_values:
-    #             sample_log["predicted_output"] = output.tolist() if isinstance(output, np.ndarray) else output
-    #
-    #         # Logowanie oczekiwanych wyników i błędów
-    #         if y_true is not None:
-    #             expected_class = y_true[i]
-    #             expected = [1 if j == expected_class else 0 for j in range(len(output))]
-    #             error_vector = [t - o for t, o in zip(expected, output)]
-    #             if log_desired_output:
-    #                 sample_log["expected_output"] = expected
-    #             if log_output_errors:
-    #                 sample_log["output_errors"] = error_vector
-    #                 total_error = sum(e ** 2 for e in error_vector)
-    #                 sample_log["total_error"] = total_error
-    #
-    #         # Logowanie wartości ukrytych neuronów
-    #         if log_hidden_values:
-    #             hidden_outputs = [
-    #                 [neuron.output for neuron in layer.neurons]
-    #                 for layer in self.layers[:-1]
-    #             ]
-    #             sample_log["hidden_layer_outputs"] = hidden_outputs
-    #
-    #         log_data.append(sample_log)
-    #
-    #     with open(f"{log_dir}/{log_filename}", "w") as log_file:
-    #         json.dump(log_data, log_file, indent=4)
-    #
-    #     weights_data = []
-    #
-    #     for layer_idx, layer in enumerate(self.layers):
-    #         layer_data = {"layer": layer_idx + 1, "neurons": []}
-    #         for neuron_idx, neuron in enumerate(layer.neurons):
-    #             neuron_data = {
-    #                 "neuron": neuron_idx + 1,
-    #                 "weights": neuron.weights,
-    #                 "bias": neuron.bias
-    #             }
-    #             layer_data["neurons"].append(neuron_data)
-    #         weights_data.append(layer_data)
-    #
-    #     with open(f"{log_dir}/{weights_filename}", "w") as weight_file:
-    #         json.dump(weights_data, weight_file, indent=4)
-    #
-    #     print(f"Logowanie zakończone. Dane zapisano do folderu {log_dir}")
-    #     return outputs
-
-    def predict_with_logging(self, X, y_true=None, log_filename="predict_log.txt",
-                             weights_filename="weights_log.txt",
+    def predict_with_logging(self, X, y_true=None, log_filename="predict_log.json",
+                             weights_filename="weights_log.json",
                              log_inputs=True, log_output_values=True,
                              log_desired_output=True, log_output_errors=True,
                              log_hidden_values=True, log_output_weights=True,
@@ -246,52 +177,64 @@ class MLP:
         log_dir = "data/mlp/logs"
         os.makedirs(log_dir, exist_ok=True)
 
+        # Struktura danych do zapisania w pliku JSON
+        log_data = []
+
+        for i, inputs in enumerate(X):
+            sample_log = {"sample": i + 1}
+            output = self.forward(inputs)
+            outputs.append(output)
+
+            if log_inputs:
+                sample_log["inputs"] = inputs.tolist() if isinstance(inputs, np.ndarray) else inputs
+
+            # Logowanie wartości wyjściowych (predykcji)
+            if log_output_values:
+                sample_log["predicted_output"] = output.tolist() if isinstance(output, np.ndarray) else output
+
+            # Logowanie oczekiwanych wyników i błędów
+            if y_true is not None:
+                expected_class = y_true[i]
+                expected = [1 if j == expected_class else 0 for j in range(len(output))]
+                error_vector = [t - o for t, o in zip(expected, output)]
+                if log_desired_output:
+                    sample_log["expected_output"] = expected
+                if log_output_errors:
+                    sample_log["output_errors"] = error_vector
+                    total_error = sum(e ** 2 for e in error_vector)
+                    sample_log["total_error"] = total_error
+
+            # Logowanie wartości ukrytych neuronów
+            if log_hidden_values:
+                hidden_outputs = [
+                    [neuron.output for neuron in layer.neurons]
+                    for layer in self.layers[:-1]
+                ]
+                sample_log["hidden_layer_outputs"] = hidden_outputs
+
+            log_data.append(sample_log)
+
         with open(f"{log_dir}/{log_filename}", "w") as log_file:
-            for i, inputs in enumerate(X):
-                output = self.forward(inputs)
-                outputs.append(output)
-                log_file.write(f"Sample {i + 1}:\n")
+            json.dump(log_data, log_file, indent=4)
 
-                # Logowanie danych wejściowych
-                if log_inputs:
-                    log_file.write(f"  Inputs: {inputs.tolist() if isinstance(inputs, np.ndarray) else inputs}\n")
+        weights_data = []
 
-                # Logowanie wartości wyjściowych (predykcji)
-                if log_output_values:
-                    log_file.write(
-                        f"  Predicted Output: {output.tolist() if isinstance(output, np.ndarray) else output}\n")
+        for layer_idx, layer in enumerate(self.layers):
+            layer_data = {"layer": layer_idx + 1, "neurons": []}
+            for neuron_idx, neuron in enumerate(layer.neurons):
+                neuron_data = {
+                    "neuron": neuron_idx + 1,
+                    "weights": neuron.weights,
+                    "bias": neuron.bias
+                }
+                layer_data["neurons"].append(neuron_data)
+            weights_data.append(layer_data)
 
-                # Logowanie oczekiwanych wyników i błędów
-                if y_true is not None:
-                    expected_class = y_true[i]
-                    expected = [1 if j == expected_class else 0 for j in range(len(output))]
-                    error_vector = [t - o for t, o in zip(expected, output)]
-                    if log_desired_output:
-                        log_file.write(f"  Expected Output: {expected}\n")
-                    if log_output_errors:
-                        log_file.write(f"  Output Errors: {error_vector}\n")
-                        total_error = sum(e ** 2 for e in error_vector)
-                        log_file.write(f"  Total Error: {total_error}\n")
-
-                # Logowanie wartości ukrytych neuronów
-                if log_hidden_values:
-                    hidden_outputs = [
-                        [neuron.output for neuron in layer.neurons]
-                        for layer in self.layers[:-1]
-                    ]
-                    log_file.write(f"  Hidden Layer Outputs: {hidden_outputs}\n")
-
-                log_file.write("\n")  # Oddzielenie między próbkami
-
-        # Zapis wag dla poszczególnych neuronów
         with open(f"{log_dir}/{weights_filename}", "w") as weight_file:
-            for layer_idx, layer in enumerate(self.layers):
-                weight_file.write(f"\nLayer {layer_idx + 1}:\n")
-                for neuron_idx, neuron in enumerate(layer.neurons):
-                    weight_file.write(f"  Neuron {neuron_idx + 1} weights: {neuron.weights}\n")
-                    weight_file.write(f"  \t\t bias: {neuron.bias}\n")
+            json.dump(weights_data, weight_file, indent=4)
 
         print(f"Logowanie zakończone. Dane zapisano do folderu {log_dir}")
         return outputs
+
 
 

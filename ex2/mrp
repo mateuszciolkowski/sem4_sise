@@ -1,0 +1,104 @@
+  # def iris_interface(self):
+    #     print("Rozpoczynasz konfigurację sieci dla klasyfikacji irysów.\n")
+    #
+    #     # Ask whether to create a new network or load an existing one
+    #     action = input("Wybierz akcję:\n1. Utwórz nową sieć\n2. Odczytaj sieć z pliku\nPodaj liczbę: ")
+    #
+    #     if action == '1':  # Create a new network
+    #         print("Tworzysz nową sieć.")
+    #
+    #         dataset_path = "data/iris/iris.data"
+    #
+    #         # Load the Iris dataset
+    #         X, y = load_iris(dataset_path, standarded=True)
+    #
+    #         # Splitting the dataset into train and test
+    #         test_size = float(input("Wybierz zbiór danych testowych (np. 0.5 dla 50%): "))
+    #         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, stratify=y)
+    #
+    #         # Prompt for the number of neurons in the hidden layer and convert input to int
+    #         layer_hidden = int(input("Podaj liczbę neuronów w warstwie ukrytej: "))
+    #         layer_sizes = [4, layer_hidden, 3]  # Input layer: 4, Hidden layer: user input, Output layer: 3
+    #
+    #         # Learning parameters
+    #         learning_rate = float(input("Podaj współczynnik uczenia (np. 0.1): "))
+    #         use_momentum = input("Czy używać momentu? (True/False): ").lower() == 'true'
+    #         if use_momentum == "true":
+    #             momentum = float(input("Podaj wartość momentu (np. 0.9): "))
+    #         else:
+    #             momentum = 0.0
+    #
+    #         # Initialize the MLP network
+    #         mlp = MLP(layer_sizes=layer_sizes,
+    #                   activation_function=sigmoid,
+    #                   activation_derivative=sigmoid_derivative,
+    #                   learning_rate=learning_rate,
+    #                   use_momentum=use_momentum,
+    #                   momentum=momentum)
+    #
+    #         # Ask the user whether they want to train the model or make predictions
+    #         action = input("Wybierz akcję:\n1. Wytrenuj sieć\n2. Dokonaj predykcji\nPodaj liczbę: ")
+    #         while True:
+    #             if action == '1':  # Train the model
+    #                 epochs = int(input("Podaj liczbę epok (np. 1000): "))
+    #                 error_threshold = float(input("Podaj próg błędu (np. 0.00001): "))
+    #                 log_interval = int(input("Podaj interwał logowania (np. 10): "))
+    #
+    #                 # Train the neural network
+    #                 mlp.train(X_train, y_train, epochs=epochs, error_threshold=error_threshold, log_interval=log_interval)
+    #
+    #                 # Save learning log and plot error curve
+    #                 mlp.save_log_of_learning(log_interval, "network_log.json")
+    #                 plot_error_curve(mlp.epoch_errors)
+    #
+    #                 # Ask if the user wants to save the network
+    #                 save_network = input("Czy chcesz zapisać wytrenowaną sieć? (Tak/Nie): ").lower()
+    #                 if save_network == 'tak':
+    #                     filename = input("Podaj nazwę pliku do zapisania sieci: ")
+    #                     mlp.save_to_file(filename)
+    #                     print(f"Sieć została zapisana w pliku {filename}.")
+    #                 else:
+    #                     print("Sieć nie została zapisana.")
+    #
+    #                 print("\nSieć została wytrenowana.")
+    #
+    #             elif action == '2':  # Make predictions
+    #                 # Ask the user for the filename of the trained model
+    #                 filename = input("Podaj nazwę pliku, z którego chcesz załadować wytrenowaną sieć: ")
+    #                 try:
+    #                     mlp_restored = MLP.load_from_file(filename, sigmoid, sigmoid_derivative)
+    #                     print("\nZaładowano wytrenowaną sieć z pliku.")
+    #
+    #                     # Predict with the trained model
+    #                     predictions = mlp_restored.predict(X_test)
+    #
+    #                     print("\nDokonano predykcji na zbiorze testowym:")
+    #                     print(predictions)
+    #                 except FileNotFoundError:
+    #                     print(f"Plik {filename} nie istnieje. Upewnij się, że podałeś poprawną nazwę.")
+    #
+    #             elif action == '3':
+    #                 break
+    #             else:
+    #                 print("Niepoprawna opcja. Wybierz 1 lub 2.")
+    #             action = input()
+    #
+    #     elif action == '2':  # Load an existing network
+    #         filename = input("Podaj nazwę pliku, z którego chcesz załadować wytrenowaną sieć: ")
+    #         try:
+    #             mlp_restored = MLP.load_from_file(filename, sigmoid, sigmoid_derivative)
+    #             print("\nZaładowano wytrenowaną sieć z pliku.")
+    #
+    #             # Predict with the trained model
+    #             predictions = mlp_restored.predict(X_test)  # Assuming X_test is predefined or loaded
+    #             print("\nDokonano predykcji na zbiorze testowym:")
+    #             print(predictions)
+    #         except FileNotFoundError:
+    #             print(f"Plik {filename} nie istnieje. Upewnij się, że podałeś poprawną nazwę.")
+    #
+    #     else:
+    #         print("Niepoprawna opcja. Wybierz 1 lub 2.")
+    #         self.iris_interface()  # Recursive call to handle invalid input.
+    #
+    # def autoascoiation_interface(self):
+        return
