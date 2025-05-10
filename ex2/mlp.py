@@ -6,7 +6,7 @@ from layer import Layer
 import os
 
 class MLP:
-    def __init__(self, layer_sizes, activation_function, activation_derivative, learning_rate=0.1, use_momentum=False, momentum=0.0, bias=0.0):
+    def __init__(self, layer_sizes, activation_function, activation_derivative, learning_rate=0.1, bias=0.0):
         self.layer_sizes = layer_sizes  # Dodanie atrybutu layer_sizes
         self.epoch_errors = None
         self.layers = []
@@ -14,10 +14,6 @@ class MLP:
         self.activation_derivative = activation_derivative
         self.learning_rate = learning_rate
         self.bias = bias
-        self.use_momentum = use_momentum
-        self.momentum = momentum if use_momentum else 0.0
-
-
 
         # Kolejne warstwy (ukryte i wyjściowe) - z neuronami, które przetwarzają dane
         for i in range(1, len(layer_sizes)):
@@ -50,24 +46,24 @@ class MLP:
                 error = sum(next_neuron.weights[i] * next_neuron.delta for next_neuron in next_layer.neurons)
                 neuron.delta = error * neuron.derivative(neuron.output)
 
-    def update_weights(self, inputs):
+    def update_weights(self, inputs,use_momentum=False, momentum=0.9):
         for i, layer in enumerate(self.layers):
             input_to_use = inputs if i == 0 else [n.output for n in self.layers[i - 1].neurons]
             for neuron in layer.neurons:
                 for j in range(len(neuron.weights)):
                     delta = self.learning_rate * neuron.delta * input_to_use[j]
-                    if self.use_momentum:
-                        delta += self.momentum * neuron.last_weight_changes[j]
+                    if use_momentum:
+                        delta += momentum * neuron.last_weight_changes[j]
                         neuron.last_weight_changes[j] = delta
                     neuron.weights[j] += delta
                 if self.bias:
                     delta_b = self.learning_rate * neuron.delta
-                    if self.use_momentum:
-                        delta_b += self.momentum * neuron.last_bias_change
+                    if use_momentum:
+                        delta_b += momentum * neuron.last_bias_change
                         neuron.last_bias_change = delta_b
                     neuron.bias += delta_b
 
-    def train(self, X, y, epochs=1000, shuffle=True, error_threshold=None,
+    def train(self, X, y, epochs=1000, shuffle=True, error_threshold=None, use_momentum=False, momentum=0.9,
               max_no_improvement_epochs=100, log_interval=10):
         no_improvement_count = 0
         best_error = float('inf')
@@ -83,7 +79,7 @@ class MLP:
 
                 outputs = self.forward(inputs)
                 self.backward(target)
-                self.update_weights(inputs)
+                self.update_weights(inputs,use_momentum=use_momentum, momentum=momentum)
                 total_error += sum((t - o) ** 2 for t, o in zip(target, outputs))
 
             self.epoch_errors.append(total_error)
@@ -94,6 +90,8 @@ class MLP:
             if error_threshold and total_error < error_threshold:
                 print(f"Error threshold reached at epoch {epoch + 1}. Stopping training.")
                 break
+
+
 
             if total_error < best_error:
                 best_error = total_error
@@ -128,8 +126,6 @@ class MLP:
         model_data = {
             "learning_rate": self.learning_rate,
             "bias": self.bias,
-            "use_momentum": self.use_momentum,
-            "momentum": self.momentum,
             "layer_sizes": [len(self.layers[0].neurons[0].weights)] + [len(layer.neurons) for layer in self.layers],
             "layers": []
         }
@@ -159,8 +155,6 @@ class MLP:
             activation_derivative=activation_derivative,
             learning_rate=data["learning_rate"],
             bias=data["bias"],
-            use_momentum=data["use_momentum"],
-            momentum=data.get("momentum", 0.0)
         )
 
         for layer_data, layer in zip(data["layers"], mlp.layers):
@@ -174,8 +168,7 @@ class MLP:
                              weights_filename="weights_log.json",
                              log_inputs=True, log_output_values=True,
                              log_desired_output=True, log_output_errors=True,
-                             log_hidden_values=True, log_output_weights=True,
-                             log_hidden_weights=True):
+                             log_hidden_values=True):
         outputs = []
         log_dir = "data/mlp/logs"
         os.makedirs(log_dir, exist_ok=True)

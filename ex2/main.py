@@ -11,7 +11,7 @@ def main():
     # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, stratify=y)
     #
     # # Stwórz sieć: 4 wejścia, 1 warstwa ukryta (np. 6 neuronów), 3 wyjścia
-    # mlp = MLP(layer_sizes=[4, 5, 3], activation_function=sigmoid, activation_derivative=sigmoid_derivative,learning_rate=0.1,use_momentum=True,momentum=0.9)
+    # mlp = MLP(layer_sizes=[4, 5, 5, 5, 5,  3], activation_function=sigmoid, activation_derivative=sigmoid_derivative,learning_rate=0.1)
     #
     # # Trenuj sieć
     # mlp.train(X_train, y_train, epochs=1000, error_threshold=0.00001, log_interval=10)
