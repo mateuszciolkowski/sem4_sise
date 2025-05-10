@@ -39,29 +39,19 @@ class Interface:
         print("\n=== Tworzenie nowej sieci ===")
         while True:
             try:
+                num_hidden = []
                 # Parametry sieci do wprowadzenia
                 num_inputs = int(input("Podaj liczbę wejść: "))
-                num_hidden = int(input("Podaj liczbę neuronów w warstwach ukrytych: "))
+                num_layers_count = int(input("Podaj ilosc warstw ukrytych: "))
+                for i in range(num_layers_count):
+                    num_hidden.append(int(input(f"Podaj liczbę neuronów w warstwie ukrytej nr {i+1} ukrytych: ")))
                 num_outputs = int(input("Podaj liczbę wyjść: "))
-                bias = float(input("Podaj wartość biasu: "))
-
-                use_momentum = input("Czy używać momentum? (tak/nie): ").lower()
-                use_momentum = use_momentum == "tak"
-
-                if use_momentum:
-                    momentum = float(input("Podaj wartość momentum (0-1): "))
-                else:
-                    momentum = 0.0
-
-                learning_rate = float(input("Podaj współczynnik uczenia (0-1): "))
+                bias = float(input("Podaj wartość biasu (jeśli nie napisz 0.0): "))
 
                 # Tworzymy sieć
-                self.mlp = MLP(layer_sizes=[num_inputs, num_hidden, num_outputs],
+                self.mlp = MLP(layer_sizes=[num_inputs] + num_hidden + [num_outputs],
                                activation_function=sigmoid,
                                activation_derivative=sigmoid_derivative,
-                               learning_rate=learning_rate,
-                               use_momentum=use_momentum,
-                               momentum=momentum,
                                bias=bias)
 
                 break  # Przechodzimy do następnego menu
@@ -125,49 +115,53 @@ class Interface:
                 print(f"Wystąpił błąd: {str(e)}")
 
     def configure_network(self):
-        """Konfiguracja sieci (liczba neuronów, epoki, bias itp.)"""
+        """Konfiguracja sieci (liczba warstw, neuronów, bias itp.)"""
         if self.mlp is None:
             print("Brak załadowanej sieci. Wróć do menu.")
             return
 
-        # Wyświetlanie bieżącej konfiguracji sieci
-        print("\n=== Aktualna konfiguracja ===")
-        print(f"1. Liczba wejść: {self.mlp.layer_sizes[0]}")
-        print(f"2. Liczba neuronów w warstwie ukrytej: {self.mlp.layer_sizes[1]}")
-        print(f"3. Liczba wyjść: {self.mlp.layer_sizes[2]}")
-        print(f"4. Bias: {self.mlp.bias}")
-        print(f"5. Używać momentum: {self.mlp.use_momentum}")
-        print(f"6. Wartość momentum: {self.mlp.momentum}")
-        print(f"7. Współczynnik uczenia: {self.mlp.learning_rate}")
-        print("===================")
+        while True:
+            print("\n=== Aktualna konfiguracja ===")
+            print(f"1. Liczba wejść: {self.mlp.layer_sizes[0]}")
+            print("2. Liczba neuronów w warstwach ukrytych:")
+            for i, size in enumerate(self.mlp.layer_sizes[1:-1], start=1):
+                print(f"   {i}) Warstwa ukryta {i}: {size}")
+            print(f"3. Liczba wyjść: {self.mlp.layer_sizes[-1]}")
+            print(f"4. Bias: {self.mlp.bias}")
+            print("5. Zmień pełną strukturę warstw")
+            print("0. Wróć do menu")
+            print("===================")
 
-        try:
-            choice = input("Wybierz numer parametru do zmiany (1-10): ")
-            if choice == '1':
-                self.mlp.layer_sizes[0] = int(input("Podaj nową liczbę wejść: "))
-            elif choice == '2':
-                self.mlp.layer_sizes[1] = int(input("Podaj nową liczbę neuronów w warstwie ukrytej: "))
-            elif choice == '3':
-                self.mlp.layer_sizes[2] = int(input("Podaj nową liczbę wyjść: "))
-            elif choice == '4':
-                self.mlp.bias = float(input("Podaj nową wartość biasu: "))
-            elif choice == '5':
-                use_momentum = input("Czy używać momentum? (tak/nie): ").lower()
-                self.mlp.use_momentum = use_momentum == "tak"
-            elif choice == '6':
-                self.mlp.momentum = float(input("Podaj nową wartość momentum (0-1): "))
-            elif choice == '7':
-                self.mlp.learning_rate = float(input("Podaj nowy współczynnik uczenia: "))
-            elif choice == '8':
-                self.mlp.epochs = int(input("Podaj nową liczbę epok: "))
-            elif choice == '9':
-                self.mlp.error_threshold = float(input("Podaj nowy próg błędu: "))
-            elif choice == '10':
-                self.mlp.log_interval = int(input("Podaj nowy interwał logowania: "))
-            else:
-                print("Nieprawidłowa opcja. Wybierz 1-10.")
-        except Exception as e:
-            print(f"Wystąpił błąd: {str(e)}")
+            try:
+                choice = input("Wybierz numer parametru do zmiany: ")
+                if choice == '1':
+                    new_inputs = int(input("Podaj nową liczbę wejść: "))
+                    self.mlp.layer_sizes[0] = new_inputs
+                elif choice == '2':
+                    hidden_count = len(self.mlp.layer_sizes) - 2
+                    for i in range(hidden_count):
+                        neurons = int(input(f"Podaj nową liczbę neuronów w warstwie ukrytej {i + 1}: "))
+                        self.mlp.layer_sizes[i + 1] = neurons
+                elif choice == '3':
+                    new_outputs = int(input("Podaj nową liczbę wyjść: "))
+                    self.mlp.layer_sizes[-1] = new_outputs
+                elif choice == '4':
+                    self.mlp.bias = float(input("Podaj nową wartość biasu: "))
+                elif choice == '5':
+                    print("Podaj nową strukturę sieci (np. 4,5,3,2 dla 4 wejść, 2 ukryte warstwy i 2 wyjścia):")
+                    structure_str = input("Nowa struktura: ")
+                    sizes = [int(x.strip()) for x in structure_str.split(",")]
+                    if len(sizes) < 2:
+                        print("Sieć musi mieć co najmniej warstwę wejściową i wyjściową!")
+                    else:
+                        self.mlp.layer_sizes = sizes
+                        print("Zmieniono strukturę sieci.")
+                elif choice == '0':
+                    break
+                else:
+                    print("Nieprawidłowa opcja. Wybierz ponownie.")
+            except Exception as e:
+                print(f"Wystąpił błąd: {str(e)}")
 
     def train_iris_network(self):
         """Trenowanie sieci na zbiorze danych Irysów"""
@@ -185,20 +179,27 @@ class Interface:
             test_error_threshold = float(input("Podaj błąd: "))
             test_log_interval = float(input("Podaj interwał błedu: "))
             test_size = float(input("Podaj procent danych testowych (0.1-0.9): "))
+
             if 0.1 <= test_size <= 0.9:
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, stratify=y)
             else:
                 raise ValueError("Wartość musi być z przedziału [0.1, 0.9]")
 
-            # Trenuj sieć
-            print("\nRozpoczynanie treningu...")
-            self.mlp.train(X_train, y_train, epochs=test_epochs,
-                           error_threshold=test_error_threshold,
-                           log_interval=test_log_interval)
-
+            generate_plot = input(f"Czy generować krzywą błedu? (tak/nie): ").strip().lower()
+            if generate_plot in ['tak', 't', 'yes', 'y']:
+                print("\nRozpoczynanie treningu...")
+                plot_error_curve(self.mlp.train(X_train, y_train, epochs=test_epochs,
+                               error_threshold=test_error_threshold,
+                               log_interval=test_log_interval))
+            elif generate_plot in ['nie', 'n', 'no']:
+                print("\nRozpoczynanie treningu...")
+                self.mlp.train(X_train, y_train, epochs=test_epochs,
+                               error_threshold=test_error_threshold,
+                               log_interval=test_log_interval)
             print("\nTrening zakończony!")
-            self.mlp.save_log_of_learning(self.mlp.log_interval, "network_log.json")
-            plot_error_curve(self.mlp.epoch_errors)
+
+            # self.mlp.save_log_of_learning(self.mlp.log_interval, "network_log.json")
+            # plot_error_curve(self.mlp.epoch_errors)
 
         except Exception as e:
             print(f"Wystąpił błąd: {str(e)}")

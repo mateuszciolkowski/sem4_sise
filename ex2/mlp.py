@@ -6,14 +6,14 @@ from layer import Layer
 import os
 
 class MLP:
-    def __init__(self, layer_sizes, activation_function, activation_derivative, learning_rate=0.1, bias=0.0):
+    def __init__(self, layer_sizes, activation_function, activation_derivative, bias=0.0):
         self.layer_sizes = layer_sizes  # Dodanie atrybutu layer_sizes
-        self.epoch_errors = None
         self.layers = []
         self.activation_function = activation_function
         self.activation_derivative = activation_derivative
-        self.learning_rate = learning_rate
         self.bias = bias
+
+        # self.epoch_errors = None
 
         # Kolejne warstwy (ukryte i wyjściowe) - z neuronami, które przetwarzają dane
         for i in range(1, len(layer_sizes)):
@@ -46,28 +46,28 @@ class MLP:
                 error = sum(next_neuron.weights[i] * next_neuron.delta for next_neuron in next_layer.neurons)
                 neuron.delta = error * neuron.derivative(neuron.output)
 
-    def update_weights(self, inputs,use_momentum=False, momentum=0.9):
+    def update_weights(self, inputs, momentum, learning_rate, use_momentum=False):
         for i, layer in enumerate(self.layers):
             input_to_use = inputs if i == 0 else [n.output for n in self.layers[i - 1].neurons]
             for neuron in layer.neurons:
                 for j in range(len(neuron.weights)):
-                    delta = self.learning_rate * neuron.delta * input_to_use[j]
+                    delta = learning_rate * neuron.delta * input_to_use[j]
                     if use_momentum:
                         delta += momentum * neuron.last_weight_changes[j]
                         neuron.last_weight_changes[j] = delta
                     neuron.weights[j] += delta
                 if self.bias:
-                    delta_b = self.learning_rate * neuron.delta
+                    delta_b = learning_rate * neuron.delta
                     if use_momentum:
                         delta_b += momentum * neuron.last_bias_change
                         neuron.last_bias_change = delta_b
                     neuron.bias += delta_b
 
     def train(self, X, y, epochs=1000, shuffle=True, error_threshold=None, use_momentum=False, momentum=0.9,
-              max_no_improvement_epochs=100, log_interval=10):
+              max_no_improvement_epochs=100, log_interval=10, learning_rate=0.1):
         no_improvement_count = 0
         best_error = float('inf')
-        self.epoch_errors = []  # Przechowuje błędy globalnie w instancji
+        epoch_errors = []  # Przechowuje błędy globalnie w instancji
 
         for epoch in range(epochs):
             samples = list(zip(X, y))
@@ -79,7 +79,7 @@ class MLP:
 
                 outputs = self.forward(inputs)
                 self.backward(target)
-                self.update_weights(inputs,use_momentum=use_momentum, momentum=momentum)
+                self.update_weights(inputs,learning_rate=learning_rate,momentum=momentum, use_momentum=use_momentum)
                 total_error += sum((t - o) ** 2 for t, o in zip(target, outputs))
 
             self.epoch_errors.append(total_error)
@@ -89,7 +89,8 @@ class MLP:
 
             if error_threshold and total_error < error_threshold:
                 print(f"Error threshold reached at epoch {epoch + 1}. Stopping training.")
-                break
+                return epoch_errors
+                # break
 
 
 
@@ -101,7 +102,9 @@ class MLP:
 
             if error_threshold is not None and no_improvement_count >= max_no_improvement_epochs:
                 print(f"No improvement for {max_no_improvement_epochs} epochs. Stopping training.")
-                break
+                return epoch_errors
+                # break
+        return epoch_errors
 
     def save_log_of_learning(self, interval, filename="log_filename.json"):
         filename = f"data/mlp/{filename}"
@@ -153,7 +156,6 @@ class MLP:
             layer_sizes=data["layer_sizes"],
             activation_function=activation_function,
             activation_derivative=activation_derivative,
-            learning_rate=data["learning_rate"],
             bias=data["bias"],
         )
 
