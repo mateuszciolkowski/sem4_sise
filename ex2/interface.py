@@ -1,3 +1,4 @@
+import sys
 from random import shuffle
 
 from sklearn.model_selection import train_test_split
@@ -26,9 +27,9 @@ class Interface:
             try:
                 action = input("Wybierz opcję (1-3): ")
                 if action == "1":
-                    self.create_network_interface()
+                    self.create_network()
                 elif action == "2":
-                    self.load_network_interface()
+                    self.load_network()
                 elif action == "3":
                     print("Do widzenia!")
                     break
@@ -52,7 +53,8 @@ class Interface:
             print("5. Testuj sieć Autoasocjacji")
             print("6. Zapisz sieć")
             print("7. Wczytaj sieć")
-            print("8. Powrót do menu głównego")
+            print("8. Utwórz nową sieć")
+            print("9. Powrót do menu głównego")
             print("===================")
 
             try:
@@ -70,15 +72,17 @@ class Interface:
                 elif action == '6':
                     self.save_network()
                 elif action == '7':
-                    self.load_network_interface()
-                elif action == '8':
-                    return  # Powrót do menu głównego
+                    self.load_network()
+                elif action == 8:
+                    self.create_network()
+                elif action == '9':
+                    sys.exit()
                 else:
                     print("Nieprawidłowa opcja. Wybierz 1-8.")
             except Exception as e:
                 print(f"Wystąpił błąd: {str(e)}")
 
-    def create_network_interface(self):
+    def create_network(self):
         print("\n=== Tworzenie nowej sieci ===")
         while True:
             try:
@@ -104,7 +108,7 @@ class Interface:
 
         self.menu_2()
 
-    def load_network_interface(self):
+    def load_network(self):
         print("\n=== Wczytywanie istniejącej sieci ===")
         try:
             filename = input("Podaj nazwę pliku z wytrenowaną siecią: ")
@@ -166,9 +170,12 @@ class Interface:
                 print(f"Wystąpił błąd: {str(e)}")
 
     def train_iris_network(self):
-        """Trenowanie sieci na zbiorze danych Irysów"""
         if self.mlp is None:
             print("Brak załadowanej sieci. Wróć do menu.")
+            return
+
+        if self.mlp.layer_sizes[0] != 4 or self.mlp.layer_sizes[-1] != 3:
+            print("Sieć nie jest skonfiugrowana pod zbiór irysów wejściowe 4 neurony wyjściowe 3 neurony")
             return
 
         dataset_path = "data/iris/iris.data"
@@ -230,6 +237,10 @@ class Interface:
             print("Brak załadowanej sieci. Wróć do menu.")
             return
 
+        if self.mlp.layer_sizes[0] != 4 or self.mlp.layer_sizes[-1] != 3:
+            print("Sieć nie jest skonfiugrowana pod zbiór irysów wejściowe 4 neurony wyjściowe 3 neurony")
+            return
+
         if data_filled:
             # Użycie podanych danych testowych
             outputs = self.mlp.predict_with_logging(iris_x_test, iris_y_true)
@@ -258,6 +269,27 @@ class Interface:
         print(confusion_matrix(iris_y_true, y_pred))
         print("\nClassification Report:")
         print(classification_report(iris_y_true, y_pred, target_names=["setosa", "versicolor", "virginica"]))
+
+    def train_autoassociation_network(self):
+        if self.mlp is None:
+            print("Brak załadowanej sieci. Wróć do menu.")
+            return
+
+        if self.mlp.layer_sizes[0] != 4 or self.mlp.layer_sizes[1] != 2 or self.mlp.layer_sizes[-1] != 4 or len(
+                self.mlp.layer_sizes[-2]) != 3:
+            print("Sieć nie jest skonfiugrowana pod sieć typu autoenkoder 4, 2, 4")
+            return
+
+    def test_autoassociation_network(self):
+        if self.mlp is None:
+            print("Brak załadowanej sieci. Wróć do menu.")
+            return
+
+        if self.mlp.layer_sizes[0] != 4 or self.mlp.layer_sizes[1] != 2 or self.mlp.layer_sizes[-1] != 4 or len(
+                self.mlp.layer_sizes[-2]) != 3:
+            print("Sieć nie jest skonfiugrowana pod zsieć typu autoenkoder 4, 2, 4")
+            return
+
 
     def save_network(self):
         """Zapisanie sieci do pliku"""

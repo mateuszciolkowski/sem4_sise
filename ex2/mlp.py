@@ -7,7 +7,7 @@ import os
 
 class MLP:
     def __init__(self, layer_sizes, activation_function, activation_derivative, bias=0.0):
-        self.layer_sizes = layer_sizes  # Dodanie atrybutu layer_sizes
+        self.layer_sizes = layer_sizes
         self.layers = []
         self.activation_function = activation_function
         self.activation_derivative = activation_derivative
