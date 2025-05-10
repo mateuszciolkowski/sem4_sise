@@ -62,7 +62,7 @@ class Interface:
                 elif action == '2':
                     self.train_iris_network()
                 elif action == '3':
-                    self.test_iris_network()
+                    self.test_iris_network(data_filled=False)
                 elif action == '4':
                     self.train_autoassociation_network()
                 elif action == '5':
@@ -216,7 +216,7 @@ class Interface:
             test_iris_move_forward = input(f"Czy przetestować ? (tak/nie): ").strip().lower()
             if test_iris_move_forward in ['tak', 't', 'yes', 'y']:
                 y_true = np.argmax(y_test, axis=1)
-                self.test_iris_network(X_test, y_true)
+                self.test_iris_network(data_filled=True,iris_x_test=X_test, iris_y_true=y_true)
             elif test_iris_move_forward in ['nie', 'n', 'no']:
                 return
 
@@ -225,10 +225,39 @@ class Interface:
         except Exception as e:
             print(f"Wystąpił błąd: {str(e)}")
 
-    def test_iris_network(self, iris_x_test = None , iris_y_true = None):
+    def test_iris_network(self,data_filled, iris_x_test = None , iris_y_true = None):
+        if self.mlp is None:
+            print("Brak załadowanej sieci. Wróć do menu.")
+            return
 
-    # outputs = mlp.predict(X_test)
-    # outputs = mlp_restored.predict_with_logging(X_test, y_true)
+        if data_filled:
+            # Użycie podanych danych testowych
+            outputs = self.mlp.predict_with_logging(iris_x_test, iris_y_true)
+            y_pred = np.argmax(outputs, axis=1)
+        else:
+            # Brak danych testowych — pytanie użytkownika o dane i podział zbioru
+            try:
+                dataset_path = "data/iris/iris.data"
+                X, y = load_iris(dataset_path, standarded=True)
+
+                test_size = float(input("Podaj procent danych testowych (0.1-0.9): "))
+                if not 0.1 <= test_size <= 0.9:
+                    raise ValueError("Wartość musi być z przedziału [0.1, 0.9]")
+
+                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, stratify=y)
+                y_true = np.argmax(y_test, axis=1)
+                outputs = self.mlp.predict_with_logging(X_test, y_true)
+                y_pred = np.argmax(outputs, axis=1)
+                iris_y_true = y_true
+            except Exception as e:
+                print(f"Wystąpił błąd: {e}")
+                return
+
+        # Wspólna część raportowania
+        print("\nConfusion Matrix:")
+        print(confusion_matrix(iris_y_true, y_pred))
+        print("\nClassification Report:")
+        print(classification_report(iris_y_true, y_pred, target_names=["setosa", "versicolor", "virginica"]))
 
     def save_network(self):
         """Zapisanie sieci do pliku"""

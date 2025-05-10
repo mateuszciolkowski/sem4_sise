@@ -82,7 +82,7 @@ class MLP:
                 self.update_weights(inputs,learning_rate=learning_rate,momentum=momentum, use_momentum=use_momentum)
                 total_error += sum((t - o) ** 2 for t, o in zip(target, outputs))
 
-            self.epoch_errors.append(total_error)
+            epoch_errors.append(total_error)
 
             if (epoch + 1) % log_interval == 0:
                 print(f"Epoch {epoch + 1}, Error: {total_error}")
