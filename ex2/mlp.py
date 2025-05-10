@@ -127,7 +127,6 @@ class MLP:
         filename = f"data/mlp/saved_network/{filename}"
 
         model_data = {
-            "learning_rate": self.learning_rate,
             "bias": self.bias,
             "layer_sizes": [len(self.layers[0].neurons[0].weights)] + [len(layer.neurons) for layer in self.layers],
             "layers": []

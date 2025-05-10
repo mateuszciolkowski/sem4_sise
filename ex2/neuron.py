@@ -12,7 +12,7 @@ use_bias -- przelacznik w ktorym wybieramy czy uzyjemy bias (przesuniecia do fun
 class Neuron:
     def __init__(self, number_of_inputs, activation_function, activation_derivative, bias=0.0, is_processing=True):
         # Wagi są losowe z zakresu -1, 1
-        self.weights = [random.randint(-1, 1) for _ in range(number_of_inputs)]
+        self.weights = [random.uniform(-1, 1) for _ in range(number_of_inputs)]
         self.bias = bias
         self.activation_function = activation_function
         self.activation_derivative = activation_derivative
