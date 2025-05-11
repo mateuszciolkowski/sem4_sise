@@ -1,4 +1,4 @@
-import math
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -19,3 +19,9 @@ def plot_error_curve(epoch_errors):
     plt.ylabel("Błąd całkowity")
     plt.grid(True)
     plt.show()
+
+def clear_log_file(log_filename):
+    log_dir = "data/mlp/logs"
+    file_path = os.path.join(log_dir, log_filename)
+    with open(file_path, 'w') as log_file:
+        log_file.truncate(0)  # Usuwa zawartość pliku

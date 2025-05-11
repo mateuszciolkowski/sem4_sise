@@ -104,8 +104,8 @@ class MLP:
             self.save_log_of_learning(epoch_errors, log_interval)
         return epoch_errors
 
-    def save_log_of_learning(self, epoch_errors, interval, filename="log_filename.json"):
-        filename = f"data/mlp/{filename}"
+    def save_log_of_learning(self, epoch_errors, interval, filename="train_log.json"):
+        filename = f"data/mlp/logs/{filename}"
         log_data = []
 
         for epoch, error in enumerate(epoch_errors):
@@ -208,7 +208,7 @@ class MLP:
 
             log_data.append(sample_log)
 
-        with open(f"{log_dir}/{log_filename}", "w") as log_file:
+        with open(f"{log_dir}/{log_filename}", "a") as log_file:
             json.dump(log_data, log_file, indent=4)
 
         weights_data = []
@@ -224,7 +224,7 @@ class MLP:
                 layer_data["neurons"].append(neuron_data)
             weights_data.append(layer_data)
 
-        with open(f"{log_dir}/{weights_filename}", "w") as weight_file:
+        with open(f"{log_dir}/{weights_filename}", "a") as weight_file:
             json.dump(weights_data, weight_file, indent=4)
 
         print(f"Logowanie zakończone. Dane zapisano do folderu {log_dir}")

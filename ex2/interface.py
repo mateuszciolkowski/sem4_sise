@@ -1,10 +1,6 @@
 import sys
-from random import shuffle
-
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
-import numpy as np
-import json
 
 from mlp import MLP
 from data import *
@@ -12,7 +8,13 @@ from utils import *
 
 
 class Interface:
+
     def __init__(self):
+        self.log_inputs = True
+        self.log_output_values = True
+        self.log_desired_output = True
+        self.log_output_errors = True
+        self.log_hidden_values = True
         self.mlp = None  # Początkowo brak sieci
         self.menu()
 
@@ -54,7 +56,8 @@ class Interface:
             print("6. Zapisz sieć")
             print("7. Wczytaj sieć")
             print("8. Utwórz nową sieć")
-            print("9. Wyjście")
+            print("9. Ustawienia logowania do plików")
+            print("10. Wyjście")
             print("===================")
 
             try:
@@ -73,9 +76,11 @@ class Interface:
                     self.save_network()
                 elif action == '7':
                     self.load_network()
-                elif action == 8:
+                elif action == '8':
                     self.create_network()
                 elif action == '9':
+                    self.logging_settings()
+                elif action == '10':
                     sys.exit()
                 else:
                     print("Nieprawidłowa opcja. Wybierz 1-8.")
@@ -243,8 +248,15 @@ class Interface:
             return
 
         if data_filled:
-            # Użycie podanych danych testowych
-            outputs = self.mlp.predict_with_logging(iris_x_test, iris_y_true)
+            # Użycie podanych danych testowych'
+            clear_log_file("predict_log.json")
+            clear_log_file("weights_log.json")
+            outputs = self.mlp.predict_with_logging(iris_x_test, iris_y_true,
+                                                    log_inputs=self.log_inputs,
+                                                    log_output_values=self.log_output_values,
+                                                    log_desired_output=self.log_desired_output,
+                                                    log_output_errors=self.log_output_errors,
+                                                    log_hidden_values=self.log_hidden_values)
             y_pred = np.argmax(outputs, axis=1)
         else:
             # Brak danych testowych — pytanie użytkownika o dane i podział zbioru
@@ -258,7 +270,14 @@ class Interface:
 
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, stratify=y)
                 y_true = np.argmax(y_test, axis=1)
-                outputs = self.mlp.predict_with_logging(X_test, y_true)
+                clear_log_file("predict_log.json")
+                clear_log_file("weights_log.json")
+                outputs = self.mlp.predict_with_logging(iris_x_test, iris_y_true,
+                                                        log_inputs=self.log_inputs,
+                                                        log_output_values=self.log_output_values,
+                                                        log_desired_output=self.log_desired_output,
+                                                        log_output_errors=self.log_output_errors,
+                                                        log_hidden_values=self.log_hidden_values)
                 y_pred = np.argmax(outputs, axis=1)
                 iris_y_true = y_true
             except Exception as e:
@@ -269,7 +288,7 @@ class Interface:
         print("\nConfusion Matrix:")
         print(confusion_matrix(iris_y_true, y_pred))
         print("\nClassification Report:")
-        print(classification_report(iris_y_true, y_pred, target_names=["setosa", "versicolor", "virginica"]))
+        print(classification_report(iris_y_true, y_pred, target_names=["setosa", "versicolor", "virginica"], zero_division=1))
 
     def train_autoassociation_network(self):
         if self.mlp is None:
@@ -378,8 +397,15 @@ class Interface:
         print("\nAutoencoder learned patterns:")
         for pattern in patterns:
             try:
-                output = self.mlp.predict([pattern])
-                formatted_output = [f"{float(val):.5f}" for val in output[0]]
+                clear_log_file("predict_log.json")
+                clear_log_file("weights_log.json")
+                outputs = self.mlp.predict_with_logging([pattern],
+                                                        log_inputs=self.log_inputs,
+                                                        log_output_values=self.log_output_values,
+                                                        log_desired_output=self.log_desired_output,
+                                                        log_output_errors=self.log_output_errors,
+                                                        log_hidden_values=self.log_hidden_values)
+                formatted_output = [f"{float(val):.5f}" for val in outputs[0]]
                 print(f"Input: {pattern} -> Output: {formatted_output}")
             except Exception as e:
                 print(f"Błąd podczas predykcji dla wzorca {pattern}: {e}")
@@ -396,3 +422,42 @@ class Interface:
             print(f"Sieć została zapisana w pliku: {filename}")
         except Exception as e:
             print(f"Wystąpił błąd przy zapisywaniu sieci: {str(e)}")
+
+    def logging_settings(self):
+        while True:
+            print("\n=== Ustawienia logowania ===")
+            print(f"1. Rejestruj wzorzec wejściowy: {'tak' if self.log_inputs else 'nie'}")
+            print(f"2. Rejestruj wartości wyjściowe neuronów wyjściowych: {'tak' if self.log_output_values else 'nie'}")
+            print(f"3. Rejestruj pożądany wzorzec odpowiedzi: {'tak' if self.log_desired_output else 'nie'}")
+            print(
+                f"4. Rejestruj błędy na poszczególnych wyjściach i całkowity błąd: {'tak' if self.log_output_errors else 'nie'}")
+            print(f"5. Rejestruj wartości i wagi neuronów ukrytych: {'tak' if self.log_hidden_values else 'nie'}")
+            print(f"6. Wyjście")
+
+            choice = input("Wybierz numer ustawienia do zmiany (1-6): ")
+
+            if choice == "6":
+                break
+            elif choice in {"1", "2", "3", "4", "5"}:
+                response = input("Podaj nową wartość (tak / nie): ").strip().lower()
+                if response not in {"tak", "nie"}:
+                    print("Nieprawidłowa wartość. Podaj 'tak' lub 'nie'.")
+                    continue
+
+                new_value = response == "tak"
+
+                if choice == "1":
+                    self.log_inputs = new_value
+                elif choice == "2":
+                    self.log_output_values = new_value
+                elif choice == "3":
+                    self.log_desired_output = new_value
+                elif choice == "4":
+                    self.log_output_errors = new_value
+                elif choice == "5":
+                    self.log_hidden_values = new_value
+
+                print("Zmieniono ustawienie.\n")
+            else:
+                print("Nieprawidłowy numer. Wybierz od 1 do 6.")
+
