@@ -228,8 +228,7 @@ class Interface:
 
             test_iris_move_forward = input(f"Czy przetestować ? (tak/nie): ").strip().lower()
             if test_iris_move_forward in ['tak', 't', 'yes', 'y']:
-                y_true = np.argmax(y_test, axis=1)
-                self.test_iris_network(data_filled=True, iris_x_test=X_test, iris_y_true=y_true)
+                self.test_iris_network(data_filled=True, iris_x_test=X_test, iris_y_test=y_test)
             elif test_iris_move_forward in ['nie', 'n', 'no']:
                 return
 
@@ -238,29 +237,28 @@ class Interface:
         except Exception as e:
             print(f"Wystąpił błąd: {str(e)}")
 
-    def test_iris_network(self, data_filled, iris_x_test=None, iris_y_true=None):
+    def test_iris_network(self, data_filled, iris_x_test=None, iris_y_test=None):
+        # Sprawdzenie czy sieć jest załadowana
         if self.mlp is None:
             print("Brak załadowanej sieci. Wróć do menu.")
             return
 
+        # Sprawdzenie czy sieć pasuje do zbioru irysów
         if self.mlp.layer_sizes[0] != 4 or self.mlp.layer_sizes[-1] != 3:
-            print("Sieć nie jest skonfiugrowana pod zbiór irysów wejściowe 4 neurony wyjściowe 3 neurony")
+            print("Sieć nie jest skonfigurowana pod zbiór irysów (4 wejścia, 3 wyjścia).")
             return
 
-        if data_filled:
-            # Użycie podanych danych testowych'
+        try:
+            # Czyszczenie logów
             clear_log_file("predict_log.json")
             clear_log_file("weights_log.json")
-            outputs = self.mlp.predict_with_logging(iris_x_test, iris_y_true,
-                                                    log_inputs=self.log_inputs,
-                                                    log_output_values=self.log_output_values,
-                                                    log_desired_output=self.log_desired_output,
-                                                    log_output_errors=self.log_output_errors,
-                                                    log_hidden_values=self.log_hidden_values)
-            y_pred = np.argmax(outputs, axis=1)
-        else:
-            # Brak danych testowych — pytanie użytkownika o dane i podział zbioru
-            try:
+
+            if data_filled:
+                # Zakładamy, że dane testowe są podane jako argumenty
+                X_test = iris_x_test
+                y_test = iris_y_test
+            else:
+                # Wczytanie zbioru z pliku
                 dataset_path = "data/iris/iris.data"
                 X, y = load_iris(dataset_path, standarded=True)
 
@@ -269,26 +267,35 @@ class Interface:
                     raise ValueError("Wartość musi być z przedziału [0.1, 0.9]")
 
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, stratify=y)
-                y_true = np.argmax(y_test, axis=1)
-                clear_log_file("predict_log.json")
-                clear_log_file("weights_log.json")
-                outputs = self.mlp.predict_with_logging(iris_x_test, iris_y_true,
-                                                        log_inputs=self.log_inputs,
-                                                        log_output_values=self.log_output_values,
-                                                        log_desired_output=self.log_desired_output,
-                                                        log_output_errors=self.log_output_errors,
-                                                        log_hidden_values=self.log_hidden_values)
-                y_pred = np.argmax(outputs, axis=1)
-                iris_y_true = y_true
-            except Exception as e:
-                print(f"Wystąpił błąd: {e}")
-                return
 
-        # Wspólna część raportowania
-        print("\nConfusion Matrix:")
-        print(confusion_matrix(iris_y_true, y_pred))
-        print("\nClassification Report:")
-        print(classification_report(iris_y_true, y_pred, target_names=["setosa", "versicolor", "virginica"], zero_division=1))
+            # Ustal prawdziwe etykiety — jeśli one-hot, to przekształć
+            y_true = np.argmax(y_test, axis=1) if y_test.ndim > 1 else y_test
+
+            # Predykcja z logowaniem
+            outputs = self.mlp.predict_with_logging(
+                X_test, y_true,
+                log_inputs=self.log_inputs,
+                log_output_values=self.log_output_values,
+                log_desired_output=self.log_desired_output,
+                log_output_errors=self.log_output_errors,
+                log_hidden_values=self.log_hidden_values
+            )
+
+            y_pred = np.argmax(outputs, axis=1)
+
+            # Raporty
+            print("\nConfusion Matrix:")
+            print(confusion_matrix(y_true, y_pred))
+
+            print("\nClassification Report:")
+            print(classification_report(
+                y_true, y_pred,
+                target_names=["setosa", "versicolor", "virginica"],
+                zero_division=1
+            ))
+
+        except Exception as e:
+            print(f"Wystąpił błąd: {e}")
 
     def train_autoassociation_network(self):
         if self.mlp is None:
@@ -426,12 +433,11 @@ class Interface:
     def logging_settings(self):
         while True:
             print("\n=== Ustawienia logowania ===")
-            print(f"1. Rejestruj wzorzec wejściowy: {'tak' if self.log_inputs else 'nie'}")
-            print(f"2. Rejestruj wartości wyjściowe neuronów wyjściowych: {'tak' if self.log_output_values else 'nie'}")
-            print(f"3. Rejestruj pożądany wzorzec odpowiedzi: {'tak' if self.log_desired_output else 'nie'}")
-            print(
-                f"4. Rejestruj błędy na poszczególnych wyjściach i całkowity błąd: {'tak' if self.log_output_errors else 'nie'}")
-            print(f"5. Rejestruj wartości i wagi neuronów ukrytych: {'tak' if self.log_hidden_values else 'nie'}")
+            print(f"1. Rejestruj wzorzec wejściowy: {self.log_inputs}")
+            print(f"2. Rejestruj wartości wyjściowe neuronów wyjściowych: {self.log_output_values}")
+            print(f"3. Rejestruj pożądany wzorzec odpowiedzi: {self.log_desired_output}")
+            print(f"4. Rejestruj błędy na poszczególnych wyjściach i całkowity błąd: {self.log_output_errors}")
+            print(f"5. Rejestruj wartości i wagi neuronów ukrytych: {self.log_hidden_values}")
             print(f"6. Wyjście")
 
             choice = input("Wybierz numer ustawienia do zmiany (1-6): ")
@@ -460,4 +466,3 @@ class Interface:
                 print("Zmieniono ustawienie.\n")
             else:
                 print("Nieprawidłowy numer. Wybierz od 1 do 6.")
-

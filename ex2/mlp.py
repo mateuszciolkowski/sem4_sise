@@ -163,10 +163,9 @@ class MLP:
         return mlp
 
     def predict_with_logging(self, X, y_true=None, log_filename="predict_log.json",
-                             weights_filename="weights_log.json",
-                             log_inputs=True, log_output_values=True,
-                             log_desired_output=True, log_output_errors=True,
-                             log_hidden_values=True):
+                             weights_filename="weights_log.json", log_inputs=True, log_output_values=True,
+                             log_desired_output=True, log_output_errors=True, log_hidden_values=True,
+                             log_total_error=True):
         outputs = []
         log_dir = "data/mlp/logs"
         os.makedirs(log_dir, exist_ok=True)
@@ -195,8 +194,9 @@ class MLP:
                     sample_log["expected_output"] = expected
                 if log_output_errors:
                     sample_log["output_errors"] = error_vector
-                    total_error = sum(e ** 2 for e in error_vector)
-                    sample_log["total_error"] = total_error
+                    if log_total_error:
+                        total_error = sum(e ** 2 for e in error_vector)
+                        sample_log["total_error"] = total_error
 
             # Logowanie wartości ukrytych neuronów
             if log_hidden_values:
@@ -208,27 +208,32 @@ class MLP:
 
             log_data.append(sample_log)
 
+        # Zapisz logi do pliku JSON
         with open(f"{log_dir}/{log_filename}", "a") as log_file:
             json.dump(log_data, log_file, indent=4)
 
+        # Logowanie wag neuronów
         weights_data = []
 
         for layer_idx, layer in enumerate(self.layers):
-            layer_data = {"layer": layer_idx + 1, "neurons": []}
+            layer_data = {"layer": layer_idx + 1, "type": "output" if layer_idx == len(self.layers) - 1 else "hidden",
+                          "neurons": []}
             for neuron_idx, neuron in enumerate(layer.neurons):
                 neuron_data = {
                     "neuron": neuron_idx + 1,
-                    "weights": neuron.weights,
-                    "bias": neuron.bias
+                    "weights": neuron.weights.tolist() if isinstance(neuron.weights, np.ndarray) else neuron.weights,
+                    "bias": neuron.bias.tolist() if isinstance(neuron.bias, np.ndarray) else neuron.bias
                 }
                 layer_data["neurons"].append(neuron_data)
             weights_data.append(layer_data)
 
+        # Zapisz wagi do pliku JSON
         with open(f"{log_dir}/{weights_filename}", "a") as weight_file:
             json.dump(weights_data, weight_file, indent=4)
 
         print(f"Logowanie zakończone. Dane zapisano do folderu {log_dir}")
         return outputs
+
 
 
 
