@@ -32,14 +32,13 @@ def load_iris(fileName, standarded = False):
 
 
 
-def load_auto_association(standarded = False):
+def load_auto_association():
     inputs = [
         (1, 0, 0, 0),
         (0, 1, 0, 0),
         (0, 0, 1, 0),
         (0, 0, 0, 1)
     ]
-
     outputs = inputs  # To samo co wejścia
 
     X = np.array(inputs)

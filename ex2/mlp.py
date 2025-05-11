@@ -90,33 +90,30 @@ class MLP:
             if error_threshold and total_error < error_threshold:
                 print(f"Error threshold reached at epoch {epoch + 1}. Stopping training.")
                 return epoch_errors
-                # break
-
-
 
             if total_error < best_error:
                 best_error = total_error
                 no_improvement_count = 0
             else:
                 no_improvement_count += 1
-
             if error_threshold is not None and no_improvement_count >= max_no_improvement_epochs:
                 print(f"No improvement for {max_no_improvement_epochs} epochs. Stopping training.")
+                self.save_log_of_learning(epoch_errors, log_interval)
+
                 return epoch_errors
-                # break
+            self.save_log_of_learning(epoch_errors, log_interval)
         return epoch_errors
 
-    def save_log_of_learning(self, interval, filename="log_filename.json"):
+    def save_log_of_learning(self, epoch_errors, interval, filename="log_filename.json"):
         filename = f"data/mlp/{filename}"
         log_data = []
 
-        for epoch, error in enumerate(self.epoch_errors):
+        for epoch, error in enumerate(epoch_errors):
             if epoch % int(interval) == 0:
                 log_data.append({"epoch": epoch, "error": error})
 
         with open(filename, 'w') as log_file:
             json.dump(log_data, log_file, indent=4)
-
 
     def predict(self, X):
         return [self.forward(inputs) for inputs in X]

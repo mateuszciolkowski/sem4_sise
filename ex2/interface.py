@@ -54,7 +54,7 @@ class Interface:
             print("6. Zapisz sieć")
             print("7. Wczytaj sieć")
             print("8. Utwórz nową sieć")
-            print("9. Powrót do menu głównego")
+            print("9. Wyjście")
             print("===================")
 
             try:
@@ -91,7 +91,7 @@ class Interface:
                 num_inputs = int(input("Podaj liczbę wejść: "))
                 num_layers_count = int(input("Podaj ilosc warstw ukrytych: "))
                 for i in range(num_layers_count):
-                    num_hidden.append(int(input(f"Podaj liczbę neuronów w warstwie ukrytej nr {i+1} ukrytych: ")))
+                    num_hidden.append(int(input(f"Podaj liczbę neuronów w warstwie ukrytej nr {i + 1} ukrytych: ")))
                 num_outputs = int(input("Podaj liczbę wyjść: "))
                 bias = float(input("Podaj wartość biasu (jeśli nie napisz 0.0): "))
 
@@ -208,22 +208,23 @@ class Interface:
             generate_plot = input(f"Czy generować krzywą błedu? (tak/nie): ").strip().lower()
             if generate_plot in ['tak', 't', 'yes', 'y']:
                 print("\nRozpoczynanie treningu...")
-                plot_error_curve(self.mlp.train(X_train, y_train, epochs=test_epochs,shuffle=test_shuffle,
-                               error_threshold=test_error_threshold, use_momentum=test_use_momentum,
-                               momentum=test_momentum,max_no_improvement_epochs=test_max_no_improvement_epochs,
-                               log_interval=test_log_interval, learning_rate=test_learning_rate))
+                plot_error_curve(self.mlp.train(X_train, y_train, epochs=test_epochs, shuffle=test_shuffle,
+                                                error_threshold=test_error_threshold, use_momentum=test_use_momentum,
+                                                momentum=test_momentum,
+                                                max_no_improvement_epochs=test_max_no_improvement_epochs,
+                                                log_interval=test_log_interval, learning_rate=test_learning_rate))
             elif generate_plot in ['nie', 'n', 'no']:
                 print("\nRozpoczynanie treningu...")
-                self.mlp.train(X_train, y_train, epochs=test_epochs,shuffle=test_shuffle,
+                self.mlp.train(X_train, y_train, epochs=test_epochs, shuffle=test_shuffle,
                                error_threshold=test_error_threshold, use_momentum=test_use_momentum,
-                               momentum=test_momentum,max_no_improvement_epochs=test_max_no_improvement_epochs,
+                               momentum=test_momentum, max_no_improvement_epochs=test_max_no_improvement_epochs,
                                log_interval=test_log_interval, learning_rate=test_learning_rate)
             print("\nTrening zakończony!")
 
             test_iris_move_forward = input(f"Czy przetestować ? (tak/nie): ").strip().lower()
             if test_iris_move_forward in ['tak', 't', 'yes', 'y']:
                 y_true = np.argmax(y_test, axis=1)
-                self.test_iris_network(data_filled=True,iris_x_test=X_test, iris_y_true=y_true)
+                self.test_iris_network(data_filled=True, iris_x_test=X_test, iris_y_true=y_true)
             elif test_iris_move_forward in ['nie', 'n', 'no']:
                 return
 
@@ -232,7 +233,7 @@ class Interface:
         except Exception as e:
             print(f"Wystąpił błąd: {str(e)}")
 
-    def test_iris_network(self,data_filled, iris_x_test = None , iris_y_true = None):
+    def test_iris_network(self, data_filled, iris_x_test=None, iris_y_true=None):
         if self.mlp is None:
             print("Brak załadowanej sieci. Wróć do menu.")
             return
@@ -276,9 +277,53 @@ class Interface:
             return
 
         if self.mlp.layer_sizes[0] != 4 or self.mlp.layer_sizes[1] != 2 or self.mlp.layer_sizes[-1] != 4 or len(
-                self.mlp.layer_sizes[-2]) != 3:
+                self.mlp.layer_sizes) != 3:
             print("Sieć nie jest skonfiugrowana pod sieć typu autoenkoder 4, 2, 4")
-            return
+
+        try:
+            test_learning_rate = float(input("Podaj learning rate: "))
+            test_use_momentum = input(f"Czy uwzględnić momentum? (tak/nie): ").strip().lower()
+            if test_use_momentum in ['tak', 't', 'yes', 'y']:
+                test_momentum = float(input("Podaj momentum: "))
+            else:
+                test_momentum = 0.0
+            test_epochs = int(input("Podaj liczbe epok: "))
+            test_error_threshold = float(input("Podaj błąd: "))
+            test_log_interval = float(input("Podaj interwał błedu: "))
+            test_max_no_improvement_epochs = int(input("Podaj liczbe epok do zatrzymanie bez poprawy wyniku: "))
+
+            test_shuffle = input(f"Czy podawać dane w losowej kolejności? (tak/nie): ").strip().lower()
+            if test_shuffle in ['tak', 't', 'yes', 'y']:
+                test_shuffle = True
+            elif test_shuffle in ['nie', 'n', 'no']:
+                test_shuffle = False
+
+            X, Y = load_auto_association()
+            generate_plot = input(f"Czy generować krzywą błedu? (tak/nie): ").strip().lower()
+            if generate_plot in ['tak', 't', 'yes', 'y']:
+                print("\nRozpoczynanie treningu...")
+                plot_error_curve(self.mlp.train(X, Y, epochs=test_epochs, shuffle=test_shuffle,
+                                                error_threshold=test_error_threshold,
+                                                use_momentum=test_use_momentum,
+                                                momentum=test_momentum,
+                                                max_no_improvement_epochs=test_max_no_improvement_epochs,
+                                                log_interval=test_log_interval, learning_rate=test_learning_rate))
+            elif generate_plot in ['nie', 'n', 'no']:
+                print("\nRozpoczynanie treningu...")
+                self.mlp.train(X, Y, epochs=test_epochs, shuffle=test_shuffle,
+                               error_threshold=test_error_threshold, use_momentum=test_use_momentum,
+                               momentum=test_momentum, max_no_improvement_epochs=test_max_no_improvement_epochs,
+                               log_interval=test_log_interval, learning_rate=test_learning_rate)
+            print("\nTrening zakończony!")
+            test_move_forward = input(f"Czy przetestować ? (tak/nie): ").strip().lower()
+
+            if test_move_forward in ['tak', 't', 'yes', 'y']:
+                self.test_autoassociation_network()
+            elif test_move_forward in ['nie', 'n', 'no']:
+                return
+        except Exception as e:
+            print(f"Wystąpił błąd: {e}")
+        return
 
     def test_autoassociation_network(self):
         if self.mlp is None:
@@ -286,10 +331,58 @@ class Interface:
             return
 
         if self.mlp.layer_sizes[0] != 4 or self.mlp.layer_sizes[1] != 2 or self.mlp.layer_sizes[-1] != 4 or len(
-                self.mlp.layer_sizes[-2]) != 3:
-            print("Sieć nie jest skonfiugrowana pod zsieć typu autoenkoder 4, 2, 4")
+                self.mlp.layer_sizes) != 3:
+            print("Sieć nie jest skonfigurowana pod autoenkoder 4-2-4.")
             return
 
+        print("\nWybierz dane do testowania autoenkodera:")
+        print("1. Użyj oryginalnego zbioru danych")
+        print("2. Wprowadź własne dane wejściowe")
+
+        try:
+            choice = input("Twój wybór (1/2): ").strip()
+        except Exception as e:
+            print(f"Błąd wejścia: {e}")
+            return
+
+        patterns = []
+
+        if choice == "1":
+            try:
+                X, Y = load_auto_association()
+                patterns = Y
+            except Exception as e:
+                print(f"Błąd ładowania danych: {e}")
+                return
+
+        elif choice == "2":
+            print("Podaj dane wejściowe (cztery liczby oddzielone spacjami, np. 1 0 0 0):")
+            while True:
+                try:
+                    user_input = input("Wprowadź dane (lub 'q' aby zakończyć): ").strip()
+                    if user_input.lower() == 'q':
+                        break
+                    values = list(map(float, user_input.split()))
+                    if len(values) != 4:
+                        print("Podaj dokładnie 4 liczby.")
+                        continue
+                    patterns.append(values)
+                except ValueError:
+                    print("Nieprawidłowy format liczb. Spróbuj ponownie.")
+                except Exception as e:
+                    print(f"Wystąpił nieoczekiwany błąd: {e}")
+        else:
+            print("Nieprawidłowy wybór.")
+            return
+
+        print("\nAutoencoder learned patterns:")
+        for pattern in patterns:
+            try:
+                output = self.mlp.predict([pattern])
+                formatted_output = [f"{float(val):.5f}" for val in output[0]]
+                print(f"Input: {pattern} -> Output: {formatted_output}")
+            except Exception as e:
+                print(f"Błąd podczas predykcji dla wzorca {pattern}: {e}")
 
     def save_network(self):
         """Zapisanie sieci do pliku"""
