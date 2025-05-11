@@ -18,6 +18,9 @@ def plot_error_curve(epoch_errors):
     plt.xlabel("Epoka")
     plt.ylabel("Błąd całkowity")
     plt.grid(True)
+
+    plt.savefig("filename.png", dpi=300, bbox_inches='tight')
+
     plt.show()
 
 def clear_log_file(log_filename):

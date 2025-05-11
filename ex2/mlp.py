@@ -231,7 +231,6 @@ class MLP:
         with open(f"{log_dir}/{weights_filename}", "a") as weight_file:
             json.dump(weights_data, weight_file, indent=4)
 
-        print(f"Logowanie zakończone. Dane zapisano do folderu {log_dir}")
         return outputs
 
 

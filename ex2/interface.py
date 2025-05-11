@@ -1,6 +1,6 @@
 import sys
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 
 from mlp import MLP
 from data import *
@@ -283,11 +283,10 @@ class Interface:
 
             y_pred = np.argmax(outputs, axis=1)
 
-            # Raporty
-            print("\nConfusion Matrix:")
+            print("\nMacierz pomyłek:")
             print(confusion_matrix(y_true, y_pred))
 
-            print("\nClassification Report:")
+            print("\nRaport klasyfikacji:")
             print(classification_report(
                 y_true, y_pred,
                 target_names=["setosa", "versicolor", "virginica"],
@@ -401,7 +400,6 @@ class Interface:
             print("Nieprawidłowy wybór.")
             return
 
-        print("\nAutoencoder learned patterns:")
         for pattern in patterns:
             try:
                 clear_log_file("predict_log.json")
@@ -413,7 +411,7 @@ class Interface:
                                                         log_output_errors=self.log_output_errors,
                                                         log_hidden_values=self.log_hidden_values)
                 formatted_output = [f"{float(val):.5f}" for val in outputs[0]]
-                print(f"Input: {pattern} -> Output: {formatted_output}")
+                print(f"Wejście: {pattern} -> Wyjście: {formatted_output}")
             except Exception as e:
                 print(f"Błąd podczas predykcji dla wzorca {pattern}: {e}")
 
