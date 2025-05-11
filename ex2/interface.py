@@ -41,7 +41,6 @@ class Interface:
                 print(f"\nWystąpił błąd: {str(e)}")
 
     def menu_2(self):
-        """Interfejs do konfiguracji i trenowania sieci"""
         if self.mlp is None:
             print("Brak załadowanej sieci. Wróć do menu.")
             return
@@ -126,7 +125,6 @@ class Interface:
             print(f"Wystąpił błąd podczas wczytywania: {str(e)}")
 
     def configure_network(self):
-        """Konfiguracja sieci (liczba warstw, neuronów, bias itp.)"""
         if self.mlp is None:
             print("Brak załadowanej sieci. Wróć do menu.")
             return
