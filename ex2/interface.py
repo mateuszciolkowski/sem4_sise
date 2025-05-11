@@ -1,7 +1,7 @@
 import sys
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-
+import pandas as pd
 from mlp import MLP
 from data import *
 from utils import *
@@ -283,8 +283,24 @@ class Interface:
 
             y_pred = np.argmax(outputs, axis=1)
 
-            print("\nMacierz pomyłek:")
-            print(confusion_matrix(y_true, y_pred))
+            # Przykład danych
+            class_names = ['setosa', 'versicolor', 'virginica']
+            cm = confusion_matrix(y_true, y_pred)  # <- Twoja macierz pomyłek
+
+            # Tworzymy DataFrame z nazwami klas
+            cm_df = pd.DataFrame(cm, index=class_names, columns=class_names)
+
+            # Liczba poprawnie sklasyfikowanych obiektów w każdej klasie (elementy na diagonali)
+            correct_per_class = np.diag(cm)
+            total_correct = correct_per_class.sum()
+
+            # Wyświetlenie wyników
+            print("Macierz pomyłek:\n", cm_df)
+            print("\nPoprawnie sklasyfikowane obiekty (w rozbiciu na klasy):")
+            for name, correct in zip(class_names, correct_per_class):
+                print(f"{name}: {correct}")
+
+            print(f"\nŁączna liczba poprawnie sklasyfikowanych obiektów: {total_correct}")
 
             print("\nRaport klasyfikacji:")
             print(classification_report(
