@@ -414,9 +414,9 @@ class Interface:
             print("Nieprawidłowy wybór.")
             return
 
+        clear_log_file("predict_log.json")
         for pattern in patterns:
             try:
-                clear_log_file("predict_log.json")
                 clear_log_file("weights_log.json")
                 outputs = self.mlp.predict_with_logging([pattern],
                                                         log_inputs=self.log_inputs,

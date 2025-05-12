@@ -28,3 +28,4 @@ def clear_log_file(log_filename):
     file_path = os.path.join(log_dir, log_filename)
     with open(file_path, 'w') as log_file:
         log_file.truncate(0)  # Usuwa zawartość pliku
+
