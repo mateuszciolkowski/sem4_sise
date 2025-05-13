@@ -15,7 +15,6 @@ class MLP:
 
         # self.epoch_errors = None
 
-        # Kolejne warstwy (ukryte i wyjściowe) - z neuronami, które przetwarzają dane
         for i in range(1, len(layer_sizes)):
             self.layers.append(
                 Layer(
@@ -67,7 +66,7 @@ class MLP:
               max_no_improvement_epochs=100, log_interval=10, learning_rate=0.1):
         no_improvement_count = 0
         best_error = float('inf')
-        epoch_errors = []  # Przechowuje błędy globalnie w instancji
+        epoch_errors = []
 
         for epoch in range(epochs):
             samples = list(zip(X, y))
@@ -170,7 +169,6 @@ class MLP:
         log_dir = "data/mlp/logs"
         os.makedirs(log_dir, exist_ok=True)
 
-        # Struktura danych do zapisania w pliku JSON
         log_data = []
 
         for i, inputs in enumerate(X):
@@ -181,11 +179,9 @@ class MLP:
             if log_inputs:
                 sample_log["inputs"] = inputs.tolist() if isinstance(inputs, np.ndarray) else inputs
 
-            # Logowanie wartości wyjściowych (predykcji)
             if log_output_values:
                 sample_log["predicted_output"] = output.tolist() if isinstance(output, np.ndarray) else output
 
-            # Logowanie oczekiwanych wyników i błędów
             if y_true is not None:
                 expected_class = y_true[i]
                 expected = [1 if j == expected_class else 0 for j in range(len(output))]
@@ -198,7 +194,6 @@ class MLP:
                         total_error = sum(e ** 2 for e in error_vector)
                         sample_log["total_error"] = total_error
 
-            # Logowanie wartości ukrytych neuronów
             if log_hidden_values:
                 hidden_outputs = [
                     [neuron.output for neuron in layer.neurons]
@@ -208,11 +203,9 @@ class MLP:
 
             log_data.append(sample_log)
 
-        # Zapisz logi do pliku JSON
         with open(f"{log_dir}/{log_filename}", "a") as log_file:
             json.dump(log_data, log_file, indent=4)
 
-        # Logowanie wag neuronów
         weights_data = []
 
         for layer_idx, layer in enumerate(self.layers):
@@ -227,7 +220,6 @@ class MLP:
                 layer_data["neurons"].append(neuron_data)
             weights_data.append(layer_data)
 
-        # Zapisz wagi do pliku JSON
         with open(f"{log_dir}/{weights_filename}", "a") as weight_file:
             json.dump(weights_data, weight_file, indent=4)
 

@@ -230,7 +230,6 @@ class Interface:
             elif test_iris_move_forward in ['nie', 'n', 'no']:
                 return
 
-            # self.mlp.save_log_of_learning(self.mlp.log_interval, "network_log.json")
 
         except Exception as e:
             print(f"Wystąpił błąd: {str(e)}")
@@ -241,7 +240,6 @@ class Interface:
             print("Brak załadowanej sieci. Wróć do menu.")
             return
 
-        # Sprawdzenie czy sieć pasuje do zbioru irysów
         if self.mlp.layer_sizes[0] != 4 or self.mlp.layer_sizes[-1] != 3:
             print("Sieć nie jest skonfigurowana pod zbiór irysów (4 wejścia, 3 wyjścia).")
             return
@@ -292,7 +290,6 @@ class Interface:
             correct_per_class = np.diag(cm)
             total_correct = correct_per_class.sum()
 
-            # Wyświetlenie wyników
             print("Macierz pomyłek:\n", cm_df)
             print("\nPoprawnie sklasyfikowane obiekty (w rozbiciu na klasy):")
             for name, correct in zip(class_names, correct_per_class):
