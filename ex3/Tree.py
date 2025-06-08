@@ -25,29 +25,27 @@ class Tree:
         self.tree.fit(self.X_train, self.y_train)
         train_pred = self.tree.predict(self.X_train)
         train_acc = accuracy_score(self.y_train, train_pred)
-        print(f"Dokładność na zbiorze treningowym: {train_acc:.4f}")
+        # print(f"Dokładność na zbiorze treningowym: {train_acc:.4f}")
 
-    def predict(self):
+    def predict(self,mode=False):
         y_pred = self.tree.predict(self.X_test)
         test_acc = accuracy_score(self.y_test, y_pred)
-        print(f"Dokładność na zbiorze testowym: {test_acc:.4f}")
+        if mode:
+            print(f"Dokładność na zbiorze testowym: {test_acc:.4f}")
+            print("\nMacierz pomyłek:")
+            print(confusion_matrix(self.y_test, y_pred))
+            print("\nRaport klasyfikacji:")
+            print(classification_report(self.y_test, y_pred, target_names=['Cammeo', 'Osmancik']))
 
+            # Sprawdzenie overfittingu
+            train_pred = self.tree.predict(self.X_train)
+            train_acc = accuracy_score(self.y_train, train_pred)
 
-        print("\nMacierz pomyłek:")
-        print(confusion_matrix(self.y_test, y_pred))
-
-        print("\nRaport klasyfikacji:")
-        print(classification_report(self.y_test, y_pred, target_names=['Cammeo', 'Osmancik']))
-
-        # Sprawdzenie overfittingu
-        train_pred = self.tree.predict(self.X_train)
-        train_acc = accuracy_score(self.y_train, train_pred)
-
-        if train_acc - test_acc > 0.1:  # próg 10%
-            print("\nUwaga: Możliwe przeuczenie modelu (overfitting).")
-        else:
-            print("\nModel nie wykazuje wyraźnego przeuczenia.")
-        print("\n")
+            if train_acc - test_acc > 0.1:  # próg 10%
+                print("\nUwaga: Możliwe przeuczenie modelu (overfitting).")
+            else:
+                print("\nModel nie wykazuje wyraźnego przeuczenia.")
+            print("\n")
         return y_pred, test_acc
 
     """
@@ -110,7 +108,7 @@ class Tree:
     Kolory oznaczaja klase 
     """
 
-    def visualize(self):
+    def visualize(self,filename):
         num_features = self.X_train.shape[1]
         feature_names = ['Area', 'Perimeter', 'Major_Axis_Length', 'Minor_Axis_Length', 'Eccentricity', 'Convex_Area',
                          'Extent']
@@ -128,8 +126,9 @@ class Tree:
             label='all'
         )
         plt.tight_layout(pad=3.0)
-        plt.savefig("tree.pdf", bbox_inches='tight')
+        plt.savefig(filename+".pdf", bbox_inches='tight')
         plt.show()
+
 
     def showImportance(self):
         feature_names = ['Area', 'Perimeter', 'Major_Axis_Length', 'Minor_Axis_Length', 'Eccentricity', 'Convex_Area',
